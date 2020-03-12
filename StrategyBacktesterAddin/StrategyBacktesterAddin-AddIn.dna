@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DnaLibrary Name="StrategyBacktesterAddin Add-In" RuntimeVersion="v4.0" xmlns="http://schemas.excel-dna.net/addin/2018/05/dnalibrary">
+  <ExternalLibrary Path="StrategyBacktesterAddin.dll" ExplicitExports="false" LoadFromBytes="true" Pack="true" IncludePdb="false" />
+  <Reference Path="DataImporter.dll" Pack="true" />
+  <Reference Path="DataTypes.dll" Pack="true" />
+  
+  <!--
+       The RuntimeVersion attribute above allows two settings:
+       * RuntimeVersion="v4.0" - for .NET 4 and 4.5
+       * RuntimeVersion="v2.0" - for .NET 2.0, 3.0 and 3.5
+
+       You can have IntelliSense (autocomplete) and validation for this file.
+       See https://github.com/Excel-DNA/ExcelDna/tree/master/Distribution/XmlSchemas/
+
+       Additional referenced assemblies can be specified by adding 'Reference' tags. 
+       These libraries will not be examined and registered with Excel as add-in libraries, 
+       but will be packed into the -packed.xll file and loaded at runtime as needed.
+       For example:
+
+       <Reference Path="Another.Library.dll" Pack="true" />
+
+       Excel-DNA also allows the XML for ribbon UI extensions to be specified in the .dna file.
+       See the main Excel-DNA site at http://excel-dna.net for downloads of the full distribution.
+  -->
+  <CustomUI>
+    <customUI xmlns='http://schemas.microsoft.com/office/2009/07/customui'>
+      <ribbon>
+        <tabs>
+          <tab id='StrategyBacktesterTab' label='Strategy Backtester'>
+            <group id='StrategyBacktesterGroup1'
+                    label='Strategy Backtester'
+                    screentip='Import data'>
+              <button id='DataImporter'
+                      label='Import Data'
+                      size='large'
+                      onAction='OnImportDataPress'
+                      imageMso='QuerySelectQueryType' />
+              <editBox id='ticker' label='Ticker' onChange='GetTickerValue' sizeString='WWWWWW'/>
+              <editBox id='startDate' label='Start Date' onChange='GetStartDateValue' sizeString='WWWWWW'
+                       screentip='Date format' supertip='dd/mm/yyyy' />
+              <editBox id='endDate' label='End Date' onChange='GetEndDateValue' sizeString='WWWWWW'
+                       screentip='Date format' supertip='dd/mm/yyyy' />
+            </group>
+          </tab>
+        </tabs>
+      </ribbon>
+    </customUI>
+  </CustomUI>
+  
+</DnaLibrary>
