@@ -4,7 +4,8 @@ using System.Linq;
 
 using System.Configuration;
 using System.Windows.Forms;
-using ServiceStack;
+using System.Text.RegularExpressions;
+using System.Net;
 
 namespace DataImporter
 {
@@ -27,13 +28,20 @@ namespace DataImporter
             string request = $"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={apiKey}&outputsize=full&datatype=csv";
             try
             {
-                List<AlphaVantageData> dailyPrices = request.GetStringFromUrl()
-                                                            .FromCsv<List<AlphaVantageData>>();
-                var queryData = from stock in dailyPrices
-                                where (DateTime.Compare(stock.Timestamp.Date, endDate.Date) <= 0 &&
-                                       DateTime.Compare(stock.Timestamp.Date, startDate.Date) >= 0)
-                                select stock;
-                this._data = queryData.Cast<AlphaVantageData>().ToList();
+                string response = new WebClient().DownloadString(request);
+                string[] dailyPrices = Regex.Split(response, "\n");
+
+                List<AlphaVantageData> data = new List<AlphaVantageData>();
+                // First occurence is the headers, which we don't want
+                var iterPrices = dailyPrices.Skip(1).ToArray();
+                // Last occurence is empty string, which we don't want
+                iterPrices = iterPrices.Take(iterPrices.Count() - 1).ToArray();
+                foreach (string line in iterPrices)
+                {
+                    data.Add(new AlphaVantageData(line));
+                }
+
+                this._data = data;
             }
             catch (Exception e)
             {

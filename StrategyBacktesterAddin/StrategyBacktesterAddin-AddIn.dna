@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <DnaLibrary Name="StrategyBacktesterAddin Add-In" RuntimeVersion="v4.0" xmlns="http://schemas.excel-dna.net/addin/2018/05/dnalibrary">
   <ExternalLibrary Path="StrategyBacktesterAddin.dll" ExplicitExports="false" LoadFromBytes="true" Pack="true" IncludePdb="false" />
-  <Reference Path="DataImporter.dll" Pack="true" />
+<!--  <Reference Path="DataImporter.dll" Pack="true" />
   <Reference Path="DataTypes.dll" Pack="true" />
-  
+ --> 
   <!--
        The RuntimeVersion attribute above allows two settings:
        * RuntimeVersion="v4.0" - for .NET 4 and 4.5
