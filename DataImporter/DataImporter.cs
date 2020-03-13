@@ -36,12 +36,20 @@ namespace DataImporter
                 var iterPrices = dailyPrices.Skip(1).ToArray();
                 // Last occurence is empty string, which we don't want
                 iterPrices = iterPrices.Take(iterPrices.Count() - 1).ToArray();
+                
                 foreach (string line in iterPrices)
                 {
                     data.Add(new AlphaVantageData(line));
                 }
 
-                this._data = data;
+                IEnumerable<AlphaVantageData> query = from price in data
+                                                      where (DateTime.Compare(startDate.Date, price.Timestamp.Date) <= 0 &&
+                                                             DateTime.Compare(price.Timestamp.Date, endDate.Date) <= 0)
+                                                      select price;
+                // Reverse the order to chronological
+                query = query.Reverse();
+
+                this._data = query.ToList();
             }
             catch (Exception e)
             {
