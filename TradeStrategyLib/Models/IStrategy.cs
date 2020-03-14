@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+
+using DataTypes;
 
 namespace TradeStrategyLib.Models
 {
@@ -14,8 +12,40 @@ namespace TradeStrategyLib.Models
         /// <summary>
         /// Get the amount of the strategy
         /// </summary>
-        double StrategyAmount { get; }
+        double GetStrategyAmount { get; }
+        
+        /// <summary>
+        /// Gets all the Trade Situations created so far. List of Trade Situations
+        /// that exist so far.
+        /// </summary>
+        List<ITradeSituation> GetTradeSituationHistory { get; }
 
-        List<ITradeSituation> TradeSituationHistory { get; }
+        /// <summary>
+        /// Tests the strategy and determines if it should take an action (buy or sell).
+        /// </summary>
+        /// <param name="arrivedQuote">Quote that has just arrived</param>
+        /// <returns>true: There is an action to take (buy or sell). False: no action to take  </returns>
+        bool ShouldTakeAction(Quote arrivedQuote);
+
+        /// <summary>
+        /// This method is used to save all the calculations (including the results of 
+        /// the positions [Trade Situations] in a text form. Please note that it's very 
+        /// heavy in load and execution as it has to work with strings and then text files.
+        /// </summary>
+        /// <returns>Text representation of your trading strategy run.</returns>
+        string OutputStrategyCalculations();
+
+        /// <summary>
+        /// Force close any hanging position: in case there would be any open positions.
+        /// Saves at the end of the day.
+        /// </summary>
+        /// <param name="quote">Quote used to perform calculations</param>
+        void ForceClosePosition(Quote quote);
+
+        /// <summary>
+        /// Returns the total profit (or loss) of this investment strategy.
+        /// </summary>
+        /// <returns>Returns PnL of strategy</returns>
+        double GetPnL();
     }
 }
