@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="StrategyBacktester.cs" />
     <Compile Include="Models\FIFODoubleArray.cs" />
     <Compile Include="Models\IStrategy.cs" />
     <Compile Include="Models\ITradeSituation.cs" />

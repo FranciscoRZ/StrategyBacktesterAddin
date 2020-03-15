@@ -21,7 +21,7 @@ namespace StrategyBacktesterAddin
 
             return output;
         }
-        public static void WriteStockData(string ticker, List<AlphaVantageData> data)
+        public static void WriteStockData(string ticker, List<DataTypes.Quote> data)
         {
             // Set up workbook
             XLSingleton.Instance.XLApp.ScreenUpdating = false;
@@ -34,27 +34,27 @@ namespace StrategyBacktesterAddin
 
             // Extract arrays from dataset and make 2D for printing
             var queryDate = from stock in data
-                            select stock.Timestamp.Date.Date;
+                            select stock.TimeStamp.Date.Date;
             object[] dates1D = queryDate.Cast<object>().Reverse().ToArray();
             object[,] dates = Make2DArray(dates1D);
 
             var queryOpen = from stock in data
-                            select stock.Open;
+                            select stock.OpenPrice;
             object[] open1D = queryOpen.Cast<object>().Reverse().ToArray();
             object[,] open = Make2DArray(open1D);
 
             var queryHigh = from stock in data
-                            select stock.High;
+                            select stock.HighPrice;
             object[] high1D = queryHigh.Cast<object>().Reverse().ToArray();
             object[,] high = Make2DArray(high1D);
 
             var queryLow = from stock in data
-                           select stock.Low;
+                           select stock.LowPrice;
             object[] low1D = queryLow.Cast<object>().Reverse().ToArray();
             object[,] low = Make2DArray(low1D);
 
             var queryClose = from stock in data
-                             select stock.Close;
+                             select stock.ClosePrice;
             object[] close1D = queryClose.Cast<object>().Reverse().ToArray();
             object[,] close = Make2DArray(close1D);
 

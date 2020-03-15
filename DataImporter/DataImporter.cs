@@ -12,11 +12,11 @@ namespace DataImporter
     public sealed class DataImporter
     {
         private string _key;
-        private List<AlphaVantageData> _data;
+        private List<DataTypes.Quote> _data;
         // Instance to used throughout application
         private static readonly DataImporter instance = new DataImporter();
 
-        public List<AlphaVantageData> GetData()
+        public List<DataTypes.Quote> GetData()
         {
             return this._data;
         }
@@ -31,7 +31,7 @@ namespace DataImporter
                 string response = new WebClient().DownloadString(request);
                 string[] dailyPrices = Regex.Split(response, "\n");
 
-                List<AlphaVantageData> data = new List<AlphaVantageData>();
+                var data = new List<DataTypes.Quote>();
                 // First occurence is the headers, which we don't want
                 var iterPrices = dailyPrices.Skip(1).ToArray();
                 // Last occurence is empty string, which we don't want
@@ -39,12 +39,12 @@ namespace DataImporter
                 
                 foreach (string line in iterPrices)
                 {
-                    data.Add(new AlphaVantageData(line));
+                    data.Add(DataTypes.QuoteDeserializer.DeserializeAlphaVantage(line));
                 }
 
-                IEnumerable<AlphaVantageData> query = from price in data
-                                                      where (DateTime.Compare(startDate.Date, price.Timestamp.Date) <= 0 &&
-                                                             DateTime.Compare(price.Timestamp.Date, endDate.Date) <= 0)
+                IEnumerable<DataTypes.Quote> query = from price in data
+                                                      where (DateTime.Compare(startDate.Date, price.TimeStamp.Date) <= 0 &&
+                                                             DateTime.Compare(price.TimeStamp.Date, endDate.Date) <= 0)
                                                       select price;
                 // Reverse the order to chronological
                 query = query.Reverse();

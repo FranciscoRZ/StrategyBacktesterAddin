@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using DataTypes;
 
@@ -56,7 +53,7 @@ namespace TradeStrategyLib.Models
         /// <summary>
         /// The current trade situation (used to store the open position mainly)
         /// </summary>
-        private ITradeSituation currentTradeSituation = null;
+        private ITradeSituation _currentTradeSituation = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MASrategy"/> class.
@@ -65,16 +62,18 @@ namespace TradeStrategyLib.Models
         /// If MA short > MA long => Buy
         /// If MA long > MA short => Sell
         /// </summary>
-        /// <param name="maShortLevel"></param>
-        /// <param name="maLongLevel"></param>
-        /// <param name="amount"></param>
-        /// <param name="takeProfitInBps"></param>
+        /// <param name="maShortLevel">ex 25</param>
+        /// <param name="maLongLevel">ex 100</param>
+        /// <param name="amount">Amount invested in strategy</param>
+        /// <param name="takeProfitInBps">PnL at which we take profit and close position</param>
         public MASrategy(int maShortLevel, int maLongLevel, double amount, double takeProfitInBps)
         {
             this._tpInBps = takeProfitInBps;
             this._shortLevel = maShortLevel;
             this._longLevel = maLongLevel;
             this._amount = amount;
+            this._longPricesHistory = new FIFODoubleArray(this._longLevel);
+            this._shortPricesHistory = new FIFODoubleArray(this._shortLevel);
         }
 
         /// <summary>
@@ -95,11 +94,11 @@ namespace TradeStrategyLib.Models
         }
 
         /// <summary>
-        /// Calculate if the position has to be opened
+        /// Computes the indicator and steps through the strategy (Open or Close position)
         /// </summary>
         /// <param name="arrivedQuote">Used to update all the parameters of the trading strategy.</param>
         /// <returns>true if the position is opened (or flipped), false otherwise</returns>
-        public bool ShouldTakeAction(Quote arrivedQuote)
+        public bool Step(Quote arrivedQuote)
         {
             // Update the data arrays
             this._longPricesHistory.Put(arrivedQuote.ClosePrice);
@@ -109,53 +108,78 @@ namespace TradeStrategyLib.Models
             double shortMean = this._shortPricesHistory.GetArrayMean();
             double longMean = this._longPricesHistory.GetArrayMean();
 
+            // Update the current position
+            if (this._currentTradeSituation != null)
+            {
+                if (this._currentTradeSituation.UpdateOnOrder(arrivedQuote))
+                {
+                    // If true we closed the position
+                    this._currentTradeSituation = null;
+                }
+            }
+
             // We flip if there's a change in position
             if (shortMean > longMean && (!this._currentWay || // current way is sell
-                                         this.currentTradeSituation == null)) // or there is no current trade situation
+                                         this._currentTradeSituation == null)) // or there is no current trade situation
             {
-                if (this.currentTradeSituation != null)
+                // close exiting order
+                if (this._currentTradeSituation != null)
                 {
-                    this.currentTradeSituation.ClosePosition(arrivedQuote);
+                    this._currentTradeSituation.ClosePosition(arrivedQuote);
                 }
 
                 // Open position
                 this._currentWay = true;
-                this.currentTradeSituation = new TradeSituation(arrivedQuote, true, this._tpInBps);
-                this._tradeSituationHistory.Add(this.currentTradeSituation);
+                this._currentTradeSituation = new TradeSituation(arrivedQuote, true, this._tpInBps);
+                this._tradeSituationHistory.Add(this._currentTradeSituation);
                 return true;
             }
             else if (shortMean < longMean && (this._currentWay|| 
-                                              this.currentTradeSituation == null))
+                                              this._currentTradeSituation == null))
             {
                 // Close existing order
-                if (this.currentTradeSituation != null)
+                if (this._currentTradeSituation != null)
                 {
-                    this.currentTradeSituation.ClosePosition(arrivedQuote);
+                    this._currentTradeSituation.ClosePosition(arrivedQuote);
                 }
 
                 // Open position
                 this._currentWay = false;
-                this.currentTradeSituation = new TradeSituation(arrivedQuote, false, this._tpInBps);
-                this._tradeSituationHistory.Add(this.currentTradeSituation);
+                this._currentTradeSituation = new TradeSituation(arrivedQuote, false, this._tpInBps);
+                this._tradeSituationHistory.Add(this._currentTradeSituation);
                 return true;
             }
             return false;
         }
         
         /// <summary>
-        /// 
+        /// Used to force close the position (example, end-of-day)
         /// </summary>
-        /// <param name="closingQuote"></param>
+        /// <param name="closingQuote">Reference Quote</param>
         public void ForceClosePosition(Quote closingQuote)
         {
-            this.currentTradeSituation.ClosePosition(closingQuote);
+            this._currentTradeSituation.ClosePosition(closingQuote);
         }
 
+        /// <summary>
+        /// Gets the Pnl of the strategy
+        /// </summary>
+        /// <returns></returns>
         public double GetPnL()
         {
-            throw new NotImplementedException();
+            double pnlInBps = 0.00;
+            foreach (ITradeSituation tradeSituation in this._tradeSituationHistory)
+            {
+                pnlInBps += tradeSituation.GetOrderPnlInBps;
+            }
+
+            return pnlInBps * this._amount;
         }
 
+        /// <summary>
+        /// Outputs all the calculations
+        /// </summary>
+        /// <returns></returns>
         public string OutputStrategyCalculations()
         {
             throw new NotImplementedException();

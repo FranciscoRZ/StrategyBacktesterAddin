@@ -21,11 +21,11 @@ namespace TradeStrategyLib.Models
         List<ITradeSituation> GetTradeSituationHistory { get; }
 
         /// <summary>
-        /// Tests the strategy and determines if it should take an action (buy or sell).
+        /// Computes indicator and steps through strategy (open / close / nothing).
         /// </summary>
         /// <param name="arrivedQuote">Quote that has just arrived</param>
         /// <returns>true: There is an action to take (buy or sell). False: no action to take  </returns>
-        bool ShouldTakeAction(Quote arrivedQuote);
+        bool Step(Quote arrivedQuote);
 
         /// <summary>
         /// This method is used to save all the calculations (including the results of 
