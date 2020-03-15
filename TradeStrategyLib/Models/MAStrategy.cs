@@ -8,7 +8,7 @@ namespace TradeStrategyLib.Models
     /// <summary>
     /// Moving Average (MA) strategy 
     /// </summary>
-    public class MASrategy : IStrategy
+    public class MAStrategy : IStrategy
     {
         /// <summary>
         /// Take profit in basis points
@@ -66,7 +66,7 @@ namespace TradeStrategyLib.Models
         /// <param name="maLongLevel">ex 100</param>
         /// <param name="amount">Amount invested in strategy</param>
         /// <param name="takeProfitInBps">PnL at which we take profit and close position</param>
-        public MASrategy(int maShortLevel, int maLongLevel, double amount, double takeProfitInBps)
+        public MAStrategy(int maShortLevel, int maLongLevel, double amount, double takeProfitInBps)
         {
             this._tpInBps = takeProfitInBps;
             this._shortLevel = maShortLevel;

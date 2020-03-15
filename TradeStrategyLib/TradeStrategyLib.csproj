@@ -45,7 +45,7 @@
     <Compile Include="Models\FIFODoubleArray.cs" />
     <Compile Include="Models\IStrategy.cs" />
     <Compile Include="Models\ITradeSituation.cs" />
-    <Compile Include="Models\MASrategy.cs" />
+    <Compile Include="Models\MAStrategy.cs" />
     <Compile Include="Models\TradeSituation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

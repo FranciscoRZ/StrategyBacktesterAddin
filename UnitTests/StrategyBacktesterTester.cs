@@ -15,7 +15,6 @@ namespace UnitTests
     public class StrategyBacktesterTester
     {
         private List<DataTypes.Quote> _data;
-        private readonly TradeStrategyLib.Models.IStrategy _strategy;
         private readonly CultureInfo _culture = new CultureInfo("fr-FR");
 
         public StrategyBacktesterTester()
@@ -60,12 +59,25 @@ namespace UnitTests
         //
         #endregion
 
+        /// <summary>
+        /// Tests that each strategy can be correctly backtested with the 
+        /// <see cref="StrategyBacktester"/> backtester class.
+        /// </summary>
         [TestMethod]
-        public void TestBacktest(TradeStrategyLib.Models.IStrategy strategy)
+        public void TestBacktest()
         {
-            //
-            // TODO: ajoutez ici la logique du test
-            //
+            var strategy = new TradeStrategyLib.Models.MAStrategy(25, 100, 1000000.00, 0.05);
+            var backtest = new StrategyBacktester(strategy, this._data);
+            backtest.Compute();
+
+            var pnlHistory = backtest.GetPnLHistory();
+            var totalPnl = backtest.GetTotalPnl();
+
+            // Check if results are empty
+            // NOTE FRZ: This test should be more rigorous with expected results to test
+            // but I don't have the time.
+            Assert.IsNotNull(pnlHistory);
+            Assert.IsNotNull(totalPnl);
         }
     }
 }
