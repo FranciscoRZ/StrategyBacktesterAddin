@@ -1,9 +1,11 @@
 ﻿using System;
-
+using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Globalization;
 using System.Runtime.InteropServices;
+
 using CustomUI = ExcelDna.Integration.CustomUI;
+using TradeStrategyLib;
 
 namespace StrategyBacktesterAddin
 {
@@ -17,10 +19,10 @@ namespace StrategyBacktesterAddin
         private CultureInfo _culture = new CultureInfo("fr-FR");
 
         // MA parameters
-        private double _maShortLevel;
-        private double _maLongLevel;
-        private double _maAmount;
-        private double _maTakeProfitInBps;
+        private int? _maShortLevel = null;
+        private int? _maLongLevel = null;
+        private double? _maAmount = null;
+        private double? _maTakeProfitInBps = null;
 
         #region Import Data
         /// <summary>
@@ -62,14 +64,14 @@ namespace StrategyBacktesterAddin
         {
             try
             {
-                this._startDate = DateTime.Parse(text, this._culture);
+                if (!string.IsNullOrEmpty(text))
+                {
+                    this._startDate = DateTime.Parse(text, this._culture);
+                }
             }
             catch (FormatException e)
             {
-                if (!string.IsNullOrEmpty(text))
-                {
-                    MessageBox.Show(e.Message);
-                }
+                MessageBox.Show(e.Message);
             }
         }
 
@@ -83,14 +85,14 @@ namespace StrategyBacktesterAddin
         {
             try
             {
-                this._endDate = DateTime.Parse(text, this._culture);
+                if (!string.IsNullOrEmpty(text))
+                {
+                    this._endDate = DateTime.Parse(text, this._culture);
+                }
             }
             catch (FormatException e)
             {
-                if (!string.IsNullOrEmpty(text))
-                {
-                    MessageBox.Show(e.Message);
-                }
+                MessageBox.Show(e.Message);   
             }
         }
         #endregion
@@ -104,7 +106,50 @@ namespace StrategyBacktesterAddin
         /// <param name="control">Exposes method to ribbon</param>
         public void TestMovingAverage(CustomUI.IRibbonControl control)
         {
-            MessageBox.Show("Method not implemented");
+            #region TestMovingAverage sanity checks
+            // --> On imported data
+            var importer = DataImporter.DataImporter.Instance;
+            List<DataTypes.Quote> data = importer.GetData();
+            if (data == null)
+            {
+                MessageBox.Show("Please import data before lauching test");
+                return;
+            }
+            // --> On strategy parameters
+            if (this._maAmount == null)
+            {
+                MessageBox.Show("Please input amount to invest in strategy");
+                return;
+            }
+            if (this._maLongLevel == null)
+            {
+                MessageBox.Show("Please input Moving Average Long Level in strategy");
+                return;
+            }
+            if (this._maShortLevel == null)
+            {
+                MessageBox.Show("Please input Moving Average Short Level parameter");
+                return;
+            }
+            if (this._maTakeProfitInBps == null)
+            {
+                MessageBox.Show("Please input Moving Average Take Profit parameter");
+                return;
+            }
+            #endregion
+
+            // Compute the backtest and get the results
+            var strategy = new TradeStrategyLib.Models.MAStrategy((int)this._maShortLevel, (int)this._maLongLevel,
+                                                                  (double)this._maAmount, (double)this._maTakeProfitInBps);
+            var backtest = new StrategyBacktester(strategy, data);
+            backtest.Compute();
+            
+            List<double> pnlHistory = backtest.GetPnLHistory();
+            List<DateTime> dates = backtest.GetDates();
+            double totalPnl = backtest.GetTotalPnl();
+
+            // Write the results
+            DataWriter.WriteBacktestResults("Moving Average", totalPnl, pnlHistory, dates);
         }
 
         /// <summary>
@@ -113,9 +158,20 @@ namespace StrategyBacktesterAddin
         /// </summary>
         /// <param name="control">Exposes method to the ribbon</param>
         /// <param name="text">Value in the edit box</param>
+        /// <exception cref="MessageBox">Shows message box on FormatException</exception>
         public void GetMAShortLevelValue(CustomUI.IRibbonControl control, string text)
         {
-            MessageBox.Show("Method not implemented");
+            try
+            {
+                if (!string.IsNullOrEmpty(text))
+                {
+                    this._maShortLevel = int.Parse(text);
+                }
+            }
+            catch (FormatException e)
+            {
+                MessageBox.Show(e.Message);    
+            }
         }
 
         /// <summary>
@@ -124,9 +180,20 @@ namespace StrategyBacktesterAddin
         /// </summary>
         /// <param name="control">Exposes method to the ribbon</param>
         /// <param name="text">Value in the edit box</param>
+        /// <exception cref="MessageBox">Shows message box on FormatException</exception>
         public void GetMALongLevelValue(CustomUI.IRibbonControl control, string text)
         {
-            MessageBox.Show("Method not implemented");
+            try
+            {
+                if (!string.IsNullOrEmpty(text))
+                {
+                    this._maLongLevel = int.Parse(text);
+                }
+            }
+            catch (FormatException e)
+            {
+                MessageBox.Show(e.Message);
+            }
         }
 
         /// <summary>
@@ -135,9 +202,20 @@ namespace StrategyBacktesterAddin
         /// </summary>
         /// <param name="control">Exposes method to the ribbon</param>
         /// <param name="text">Value in the edit box</param>
+        /// <exception cref="MessageBox">Shows message box on FormatException</exception>
         public void GetMAAmountValue(CustomUI.IRibbonControl control, string text)
         {
-            MessageBox.Show("Method not implemented");
+            try
+            {
+                if (!string.IsNullOrEmpty(text))
+                {
+                    this._maAmount = double.Parse(text);
+                }
+            }
+            catch (FormatException e)
+            {
+                MessageBox.Show(e.Message);    
+            }
         }
 
         /// <summary>
@@ -146,9 +224,20 @@ namespace StrategyBacktesterAddin
         /// </summary>
         /// <param name="control">Exposes method to the ribbon</param>
         /// <param name="text">Value in the edit box</param>
+        /// <exception cref="MessageBox">Shows message box on FormatException</exception>
         public void GetMATakeProfitValue(CustomUI.IRibbonControl control, string text)
         {
-            MessageBox.Show("Method not implemented");
+            try
+            {
+                if (!string.IsNullOrEmpty(text))
+                {
+                    this._maTakeProfitInBps = double.Parse(text);
+                }
+            }
+            catch (FormatException e)
+            {
+                MessageBox.Show(e.Message);
+            }
         }
 
         #endregion

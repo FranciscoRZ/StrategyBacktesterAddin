@@ -40,6 +40,16 @@ namespace TradeStrategyLib
             this._strategy.ForceClosePosition(this._data.Last());
         }
 
+        public List<DateTime> GetDates()
+        {
+            var dates = new List<DateTime>();
+            foreach(Models.ITradeSituation trade in this._strategy.GetTradeSituationHistory)
+            {
+                dates.Add(trade.GetExecutedCloseQuote.TimeStamp.Date);
+            }
+            return dates;
+        }
+
         /// <summary>
         /// Gets the pnl history of the trade
         /// </summary>

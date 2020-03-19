@@ -76,6 +76,10 @@
       <Project>{CE0A6D10-D120-40B3-93AA-D1B7E8119FC6}</Project>
       <Name>DataTypes</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TradeStrategyLib\TradeStrategyLib.csproj">
+      <Project>{001b37e2-1e3c-4ed7-b6e8-668bcda0c77e}</Project>
+      <Name>TradeStrategyLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

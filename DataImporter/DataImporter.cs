@@ -43,9 +43,9 @@ namespace DataImporter
                 }
 
                 IEnumerable<DataTypes.Quote> query = from price in data
-                                                      where (DateTime.Compare(startDate.Date, price.TimeStamp.Date) <= 0 &&
-                                                             DateTime.Compare(price.TimeStamp.Date, endDate.Date) <= 0)
-                                                      select price;
+                                                     where (DateTime.Compare(startDate.Date, price.TimeStamp.Date) <= 0 &&
+                                                            DateTime.Compare(price.TimeStamp.Date, endDate.Date) <= 0)
+                                                     select price;
                 // Reverse the order to chronological
                 query = query.Reverse();
 
