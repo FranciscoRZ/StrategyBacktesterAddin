@@ -28,7 +28,7 @@
         <tabs>
           <tab id='StrategyBacktesterTab' label='Strategy Backtester'>
             <group id='StrategyBacktesterGroup1'
-                    label='Strategy Backtester'
+                    label='Data Importer'
                     screentip='Import data'>
               <button id='DataImporter'
                       label='Import Data'
@@ -40,6 +40,19 @@
                        screentip='Date format' supertip='dd/mm/yyyy' />
               <editBox id='endDate' label='End Date' onChange='GetEndDateValue' sizeString='WWWWWW'
                        screentip='Date format' supertip='dd/mm/yyyy' />
+            </group>
+            <group id='StrategyBacktesterLaunchMA'
+                   label='Moving Average Strategy'
+                   screentip="Only launch if you've already imported the data">
+              <button id="MATest"
+                      label="Launch MA Test"
+                      size="large"
+                      onAction="TestMovingAverage"
+                      imageMso="ChartAreaChart" />
+              <editBox id="maShortLevel" label="MA Short Level" onChange="GetMAShortLevelValue" sizeString="WWWWW" />
+              <editBox id="maLongLevel" label="MA Long Level" onChange="GetMALongLevelValue" sizeString="WWWWW" />
+              <editBox id="maAmount" label="MA Amount" onChange="GetMAAmountValue" sizeString="WWWWW" />
+              <editBox id="maTakeProfit" label="MA Take Profit in BPs" onChange="GetMATakeProfitValue" sizeString="WWWWW" />
             </group>
           </tab>
         </tabs>

@@ -14,8 +14,8 @@ namespace UnitTests
     [TestClass]
     public class StrategyBacktesterTester
     {
-        private List<DataTypes.Quote> _data;
-        private readonly CultureInfo _culture = new CultureInfo("fr-FR");
+        private static List<DataTypes.Quote> _data;
+        private static readonly CultureInfo _culture = new CultureInfo("fr-FR");
 
         public StrategyBacktesterTester()
         {
@@ -28,13 +28,13 @@ namespace UnitTests
         public TestContext TestContext { get; set; }
 
         [ClassInitialize]
-        public void InitClass(TestContext testContext)
+        public static void InitClass(TestContext testContext)
         {
             // load market data for the tests
-            var startDate = DateTime.Parse("02/02/2019", this._culture);
-            var endDate = DateTime.Parse("02/02/2020", this._culture);
+            var startDate = DateTime.Parse("02/02/2019", _culture);
+            var endDate = DateTime.Parse("02/02/2020", _culture);
             DataImporter.DataImporter.Instance.ImportData("MSFT", startDate, endDate);
-            this._data = DataImporter.DataImporter.Instance.GetData();
+            _data = DataImporter.DataImporter.Instance.GetData();
         }
 
         #region Attributs de tests supplémentaires
@@ -67,7 +67,7 @@ namespace UnitTests
         public void TestBacktest()
         {
             var strategy = new TradeStrategyLib.Models.MAStrategy(25, 100, 1000000.00, 0.05);
-            var backtest = new StrategyBacktester(strategy, this._data);
+            var backtest = new StrategyBacktester(strategy, _data);
             backtest.Compute();
 
             var pnlHistory = backtest.GetPnLHistory();
