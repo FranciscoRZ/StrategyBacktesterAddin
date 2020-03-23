@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Excel = Microsoft.Office.Interop.Excel;
 
-using DataImporter;
-
 namespace StrategyBacktesterAddin
 {
     public static class DataWriter
