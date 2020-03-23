@@ -12,7 +12,7 @@ namespace TradeStrategyLib.Models
         /// array.Length - 1
         /// </summary>
         private readonly int _arrayLastIndex;
-        
+
         /// <summary>
         /// Array storing all current values taken into account
         /// in the trade strategy.
@@ -103,6 +103,57 @@ namespace TradeStrategyLib.Models
             }
 
             return sum;
+        }
+
+        /// <summary>
+        /// Returns the max of the array
+        /// </summary>
+        /// <returns>Array's sum</returns>
+        public double GetMax()
+        {
+            double max = 0.00;
+            for (int i = 0; i <= this._arrayLastIndex; i++)
+            {
+                if (max < this._array[i])
+                {
+                    max = this._array[i];
+                }
+
+            }
+
+            return max;
+        }
+
+        /// <summary>
+        /// Returns the max of the array
+        /// </summary>
+        /// <returns>Array's sum</returns>
+        public double GetMin()
+        {
+            double min = 0.00;
+            for (int i = 0; i <= this._arrayLastIndex; i++)
+            {
+                if (min > this._array[i])
+                {
+                    min = this._array[i];
+                }
+
+            }
+
+            return min;
+        }
+
+        /// <summary>
+        /// Initialize the array to 0
+        /// </summary>
+        /// <returns>Array's sum</returns>
+        public void Initialize()
+        {
+            for (int i = 0; i <= this._arrayLastIndex; i++)
+            {
+                this._array[i] = 0.00;
+            }
+
         }
 
         /// <summary>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <DnaLibrary Name="StrategyBacktesterAddin Add-In" RuntimeVersion="v4.0" xmlns="http://schemas.excel-dna.net/addin/2018/05/dnalibrary">
   <ExternalLibrary Path="StrategyBacktesterAddin.dll" ExplicitExports="false" LoadFromBytes="true" Pack="true" IncludePdb="false" />
-<!--  <Reference Path="DataImporter.dll" Pack="true" />
+  <!--  <Reference Path="DataImporter.dll" Pack="true" />
   <Reference Path="DataTypes.dll" Pack="true" />
- --> 
+ -->
   <!--
        The RuntimeVersion attribute above allows two settings:
        * RuntimeVersion="v4.0" - for .NET 4 and 4.5
@@ -27,6 +27,7 @@
       <ribbon>
         <tabs>
           <tab id='StrategyBacktesterTab' label='Strategy Backtester'>
+            
             <group id='StrategyBacktesterImportData'
                     label='Data Importer'
                     screentip='Import data'>
@@ -53,11 +54,43 @@
               <editBox id="maLongLevel" label="MA Long Level" onChange="GetMALongLevelValue" sizeString="WWWWW" />
               <editBox id="maAmount" label="MA Amount" onChange="GetMAAmountValue" sizeString="WWWWW" />
               <editBox id="maTakeProfit" label="MA Take Profit in BPs" onChange="GetMATakeProfitValue" sizeString="WWWWW" />
+
             </group>
+            <group id='StrategyBacktesterLaunchSAR'
+                   label='Parabolic SAR Strategy'
+                   screentip="Only launch if you've already imported the data">
+              <button id="SARTest"
+                      label="Launch Parabolic SAR Test"
+                      size="large"
+                      onAction="TestParabolicSAR"
+                      imageMso="ChartAreaChart" />
+              <editBox id="SARAccFactorLevel" label="SAR Acceleration Factor" onChange="GetSARAccFactorValue" sizeString="WWWWW" />
+              <editBox id="SARMaxAccFactorLevel" label="SAR Max Acceleration Factor" onChange="GetSARMaxAccFactorValue" sizeString="WWWWW" />
+              <editBox id="SARAccFactorStep" label="SAR Acceleration Factor Step" onChange="GetSARAccFactorStepValue" sizeString="WWWWW" />
+              <editBox id="SARAmount" label="Parabolic SAR Amount" onChange="GetSARAmountValue" sizeString="WWWWW" />
+              <editBox id="SARTakeProfit" label="SAR Take Profit in BPs" onChange="GetSARTakeProfitValue" sizeString="WWWWW" />
+
+            </group>
+            <group id='StrategyBacktesterLaunchBollinger'
+                   label='Bollinger Strategy'
+                   screentip="Only launch if you've already imported the data">
+              <button id="BollingerTest"
+                      label="Launch Bollinger Test"
+                      size="large"
+                      onAction="TestBollinger"
+                      imageMso="ChartAreaChart" />
+              <editBox id="bolShortLevel" label="MA Short Level" onChange="GetBolShortLevelValue" sizeString="WWWWW" />
+              <editBox id="bolUpper_bound" label="x / upper_bound = x*sigma:" onChange="GetBolUpperBoundValue" sizeString="WWWWW" />
+              <editBox id="bolLower_bound" label="y / lower_bound = -y*sigma:" onChange="GetBolLowerBoundValue" sizeString="WWWWW" />
+              <editBox id="bolAmount" label="Bollinger Amount" onChange="GetBolAmountValue" sizeString="WWWWW" />
+              <editBox id="bolTakeProfit" label="Bollinger Take Profit in BPs" onChange="GetBolTakeProfitValue" sizeString="WWWWW" />
+
+            </group>
+
           </tab>
         </tabs>
       </ribbon>
     </customUI>
   </CustomUI>
-  
+
 </DnaLibrary>

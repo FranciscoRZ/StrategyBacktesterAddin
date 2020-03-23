@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\BollingerStrategy.cs" />
+    <Compile Include="Models\ParabolicSARStrategy.cs" />
     <Compile Include="StrategyBacktester.cs" />
     <Compile Include="Models\FIFODoubleArray.cs" />
     <Compile Include="Models\IStrategy.cs" />

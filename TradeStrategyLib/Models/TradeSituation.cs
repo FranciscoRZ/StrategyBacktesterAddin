@@ -90,7 +90,7 @@ namespace TradeStrategyLib.Models
         {
             get { return this._executedOpenQuote; }
         }
-        
+
         /// <summary>
         /// Gets the Closing quote
         /// </summary>
@@ -98,7 +98,7 @@ namespace TradeStrategyLib.Models
         {
             get { return this._executedCloseQuote; }
         }
-        
+
         /// <summary>
         /// Gets the PnL of this position in basis points
         /// </summary>
@@ -255,8 +255,8 @@ namespace TradeStrategyLib.Models
         {
             if (this._isClosed)
             {
-                this.pnlInBps = this.IsLongTrade ? this._executedCloseQuote.ClosePrice - this._executedOpenQuote.ClosePrice
-                                                 : this._executedOpenQuote.ClosePrice - this._executedCloseQuote.OpenPrice;
+                this.pnlInBps = this.IsLongTrade ? (this._executedCloseQuote.ClosePrice - this._executedOpenQuote.ClosePrice) / this._executedOpenQuote.ClosePrice
+                                                 : (this._executedOpenQuote.ClosePrice - this._executedCloseQuote.ClosePrice) / this._executedCloseQuote.ClosePrice;
             }
             else
             {
