@@ -10,13 +10,8 @@ namespace TradeStrategyLib.Models
     /// <summary>
     /// Bollinger strategy 
     /// </summary>
-    public class BollingerStrategy : IStrategy
-    {
-        /// <summary>
-        /// Take profit in basis points
-        /// </summary>
-        private readonly double _tpInBps;
-        
+    public class BollingerStrategy : StrategyBase
+    {        
         /// <summary>
         /// Short level of moving average
         /// </summary>
@@ -32,39 +27,11 @@ namespace TradeStrategyLib.Models
         /// </summary>
         private readonly int _lowerBound;
 
-        List<DataTypes.Quote> data;
-
         /// <summary>
         /// FIFO collection with a "short" history and all history
         /// </summary>
         private readonly FIFODoubleArray _shortPricesHistory;
         private readonly FIFODoubleArray _PricesHistory;
-
-        /// <summary>
-        /// The market data to use
-        /// </summary>
-        //private readonly List<DataTypes.Quote> _data;
-        //private FIFODoubleArray _datatocalc;
-
-        /// <summary>
-        /// Trading amount
-        /// </summary>
-        private readonly double _amount;
-
-        /// <summary>
-        /// Private field of the TradeSituationHistory getter
-        /// </summary>
-        private readonly List<ITradeSituation> _tradeSituationHistory = new List<ITradeSituation>();
-
-        /// <summary>
-        /// Current Way: true for Buy, false for Sell
-        /// </summary>
-        private bool _currentWay;
-
-        /// <summary>
-        /// The current trade situation (used to store the open position mainly)
-        /// </summary>
-        private ITradeSituation _currentTradeSituation = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MASrategy"/> class.
@@ -79,31 +46,13 @@ namespace TradeStrategyLib.Models
         /// <param name="amount">Amount invested in strategy</param>
         /// <param name="takeProfitInBps">PnL at which we take profit and close position</param>
         public BollingerStrategy(int bolShortLevel, int bolUpperBound, int bolLowerBound, double amount, double takeProfitInBps)
+               : base(takeProfitInBps, amount)
         {
-            this._tpInBps = takeProfitInBps;
             this._shortLevel = bolShortLevel;
             this._upperBound = bolUpperBound;
             this._lowerBound = bolLowerBound;
-            this._amount = amount;
             this._shortPricesHistory = new FIFODoubleArray(this._shortLevel);
             this._PricesHistory = new FIFODoubleArray(10000);
-        }
-
-        /// <summary>
-        /// Get the amount used to trade
-        /// </summary>
-        /// <returns>The initial amount invested in strategy</returns>
-        public double GetStrategyAmount
-        {
-            get { return this._amount;  }
-        }
-
-        /// <summary>
-        /// Gets all the trade situations that have happened. 
-        /// </summary>
-        public List<ITradeSituation> GetTradeSituationHistory
-        {
-            get { return this._tradeSituationHistory; }
         }
 
         /// <summary>
@@ -111,7 +60,7 @@ namespace TradeStrategyLib.Models
         /// </summary>
         /// <param name="arrivedQuote">Used to update all the parameters of the trading strategy.</param>
         /// <returns>true if the position is opened (or flipped), false otherwise</returns>
-        public bool Step(Quote arrivedQuote)
+        public override bool Step(Quote arrivedQuote)
         {
             // Update the data arrays
             this._shortPricesHistory.Put(arrivedQuote.ClosePrice);
@@ -183,39 +132,5 @@ namespace TradeStrategyLib.Models
             }
             return false;
         }
-        
-        /// <summary>
-        /// Used to force close the position (example, end-of-day)
-        /// </summary>
-        /// <param name="closingQuote">Reference Quote</param>
-        public void ForceClosePosition(Quote closingQuote)
-        {
-            this._currentTradeSituation.ClosePosition(closingQuote);
-        }
-
-        /// <summary>
-        /// Gets the Pnl of the strategy
-        /// </summary>
-        /// <returns></returns>
-        public double GetPnL()
-        {
-            double pnlInBps = 0.00;
-            foreach (ITradeSituation tradeSituation in this._tradeSituationHistory)
-            {
-                pnlInBps += tradeSituation.GetOrderPnlInBps;
-            }
-
-            return pnlInBps * this._amount;
-        }
-
-        /// <summary>
-        /// Outputs all the calculations
-        /// </summary>
-        /// <returns></returns>
-        public string OutputStrategyCalculations()
-        {
-            throw new NotImplementedException();
-        }
-
     }
 }
