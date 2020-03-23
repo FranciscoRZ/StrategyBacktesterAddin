@@ -4,30 +4,23 @@
   <!--  <Reference Path="DataImporter.dll" Pack="true" />
   <Reference Path="DataTypes.dll" Pack="true" />
  -->
-  <!--
-       The RuntimeVersion attribute above allows two settings:
-       * RuntimeVersion="v4.0" - for .NET 4 and 4.5
-       * RuntimeVersion="v2.0" - for .NET 2.0, 3.0 and 3.5
-
-       You can have IntelliSense (autocomplete) and validation for this file.
-       See https://github.com/Excel-DNA/ExcelDna/tree/master/Distribution/XmlSchemas/
-
-       Additional referenced assemblies can be specified by adding 'Reference' tags. 
-       These libraries will not be examined and registered with Excel as add-in libraries, 
-       but will be packed into the -packed.xll file and loaded at runtime as needed.
-       For example:
-
-       <Reference Path="Another.Library.dll" Pack="true" />
-
-       Excel-DNA also allows the XML for ribbon UI extensions to be specified in the .dna file.
-       See the main Excel-DNA site at http://excel-dna.net for downloads of the full distribution.
-  -->
   <CustomUI>
     <customUI xmlns='http://schemas.microsoft.com/office/2009/07/customui'>
       <ribbon>
         <tabs>
           <tab id='StrategyBacktesterTab' label='Strategy Backtester'>
-            
+
+            <group id="StrategyBacktesterLaunchAll"
+                   label="Multithread Engine"
+                   screentip="Only launch if you've imported the data and specified all arguments">
+              <button id="LaunchAllTests"
+                      label="Launch Tests"
+                      size="large"
+                      onAction="OnLaunchAllPress"
+                      imageMso="SymbolInsert"
+                      screentip="Launches all backtests by multithreading"/>
+            </group>
+
             <group id='StrategyBacktesterImportData'
                     label='Data Importer'
                     screentip='Import data'>
@@ -36,55 +29,55 @@
                       size='large'
                       onAction='OnImportDataPress'
                       imageMso='QuerySelectQueryType' />
-              <editBox id='ticker' label='Ticker' onChange='GetTickerValue' sizeString='WWWWWW'/>
-              <editBox id='startDate' label='Start Date' onChange='GetStartDateValue' sizeString='WWWWWW'
+              <editBox id='ticker' label='Ticker' onChange='GetTickerValue' sizeString='WWWW'/>
+              <editBox id='startDate' label='Start Date' onChange='GetStartDateValue' sizeString='WWWW'
                        screentip='Date format' supertip='dd/mm/yyyy' />
-              <editBox id='endDate' label='End Date' onChange='GetEndDateValue' sizeString='WWWWWW'
+              <editBox id='endDate' label='End Date' onChange='GetEndDateValue' sizeString='WWWW'
                        screentip='Date format' supertip='dd/mm/yyyy' />
             </group>
+            
             <group id='StrategyBacktesterLaunchMA'
                    label='Moving Average Strategy'
                    screentip="Only launch if you've already imported the data">
               <button id="MATest"
-                      label="Launch MA Test"
+                      label="MA Test"
                       size="large"
                       onAction="TestMovingAverage"
                       imageMso="ChartAreaChart" />
-              <editBox id="maShortLevel" label="MA Short Level" onChange="GetMAShortLevelValue" sizeString="WWWWW" />
-              <editBox id="maLongLevel" label="MA Long Level" onChange="GetMALongLevelValue" sizeString="WWWWW" />
-              <editBox id="maAmount" label="MA Amount" onChange="GetMAAmountValue" sizeString="WWWWW" />
-              <editBox id="maTakeProfit" label="MA Take Profit in BPs" onChange="GetMATakeProfitValue" sizeString="WWWWW" />
-
+              <editBox id="maShortLevel" label="MA Short Level" onChange="GetMAShortLevelValue" sizeString="WWWW" />
+              <editBox id="maLongLevel" label="MA Long Level" onChange="GetMALongLevelValue" sizeString="WWWW" />
+              <editBox id="maAmount" label="MA Amount" onChange="GetMAAmountValue" sizeString="WWWW" />
+              <editBox id="maTakeProfit" label="MA Take Profit in BPs" onChange="GetMATakeProfitValue" sizeString="WWWW" />
             </group>
+            
             <group id='StrategyBacktesterLaunchSAR'
                    label='Parabolic SAR Strategy'
                    screentip="Only launch if you've already imported the data">
               <button id="SARTest"
-                      label="Launch Parabolic SAR Test"
+                      label="SAR Test"
                       size="large"
                       onAction="TestParabolicSAR"
                       imageMso="ChartAreaChart" />
-              <editBox id="SARAccFactorLevel" label="SAR Acceleration Factor" onChange="GetSARAccFactorValue" sizeString="WWWWW" />
-              <editBox id="SARMaxAccFactorLevel" label="SAR Max Acceleration Factor" onChange="GetSARMaxAccFactorValue" sizeString="WWWWW" />
-              <editBox id="SARAccFactorStep" label="SAR Acceleration Factor Step" onChange="GetSARAccFactorStepValue" sizeString="WWWWW" />
-              <editBox id="SARAmount" label="Parabolic SAR Amount" onChange="GetSARAmountValue" sizeString="WWWWW" />
-              <editBox id="SARTakeProfit" label="SAR Take Profit in BPs" onChange="GetSARTakeProfitValue" sizeString="WWWWW" />
-
+              <editBox id="SARAccFactorLevel" label="SAR Acceleration Factor" onChange="GetSARAccFactorValue" sizeString="WWWW" />
+              <editBox id="SARMaxAccFactorLevel" label="SAR Max Acceleration Factor" onChange="GetSARMaxAccFactorValue" sizeString="WWWW" />
+              <editBox id="SARAccFactorStep" label="SAR Acceleration Factor Step" onChange="GetSARAccFactorStepValue" sizeString="WWWW" />
+              <editBox id="SARAmount" label="Parabolic SAR Amount" onChange="GetSARAmountValue" sizeString="WWWW" />
+              <editBox id="SARTakeProfit" label="SAR Take Profit in BPs" onChange="GetSARTakeProfitValue" sizeString="WWWW" />
             </group>
+            
             <group id='StrategyBacktesterLaunchBollinger'
                    label='Bollinger Strategy'
                    screentip="Only launch if you've already imported the data">
               <button id="BollingerTest"
-                      label="Launch Bollinger Test"
+                      label="Bollinger Test"
                       size="large"
                       onAction="TestBollinger"
                       imageMso="ChartAreaChart" />
-              <editBox id="bolShortLevel" label="MA Short Level" onChange="GetBolShortLevelValue" sizeString="WWWWW" />
-              <editBox id="bolUpper_bound" label="x / upper_bound = x*sigma:" onChange="GetBolUpperBoundValue" sizeString="WWWWW" />
-              <editBox id="bolLower_bound" label="y / lower_bound = -y*sigma:" onChange="GetBolLowerBoundValue" sizeString="WWWWW" />
-              <editBox id="bolAmount" label="Bollinger Amount" onChange="GetBolAmountValue" sizeString="WWWWW" />
-              <editBox id="bolTakeProfit" label="Bollinger Take Profit in BPs" onChange="GetBolTakeProfitValue" sizeString="WWWWW" />
-
+              <editBox id="bolShortLevel" label="MA Short Level" onChange="GetBolShortLevelValue" sizeString="WWWW" />
+              <editBox id="bolUpper_bound" label="x / upper_bound = x*sigma:" onChange="GetBolUpperBoundValue" sizeString="WWWW" />
+              <editBox id="bolLower_bound" label="y / lower_bound = -y*sigma:" onChange="GetBolLowerBoundValue" sizeString="WWWW" />
+              <editBox id="bolAmount" label="Bollinger Amount" onChange="GetBolAmountValue" sizeString="WWWW" />
+              <editBox id="bolTakeProfit" label="Bollinger Take Profit in BPs" onChange="GetBolTakeProfitValue" sizeString="WWWW" />
             </group>
 
           </tab>

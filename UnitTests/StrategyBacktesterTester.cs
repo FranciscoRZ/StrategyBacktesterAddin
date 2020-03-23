@@ -35,37 +35,26 @@ namespace UnitTests
             DataImporter.DataImporter.Instance.ImportData("MSFT", startDate, endDate);
             _data = DataImporter.DataImporter.Instance.GetData();
         }
-
-        #region Attributs de tests supplémentaires
-        //
-        // Vous pouvez utiliser les attributs supplémentaires suivants lorsque vous écrivez vos tests :
-        //
-        // Utilisez ClassInitialize pour exécuter du code avant d'exécuter le premier test de la classe
-        // [ClassInitialize()]
-        // public static void MyClassInitialize(TestContext testContext) { }
-        //
-        // Utilisez ClassCleanup pour exécuter du code une fois que tous les tests d'une classe ont été exécutés
-        // [ClassCleanup()]
-        // public static void MyClassCleanup() { }
-        //
-        // Utilisez TestInitialize pour exécuter du code avant d'exécuter chaque test 
-        // [TestInitialize()]
-        // public void MyTestInitialize() { }
-        //
-        // Utilisez TestCleanup pour exécuter du code après que chaque test a été exécuté
-        // [TestCleanup()]
-        // public void MyTestCleanup() { }
-        //
-        #endregion
-
+        
         /// <summary>
         /// Tests that each strategy can be correctly backtested with the 
         /// <see cref="StrategyBacktester"/> backtester class.
         /// </summary>
         [TestMethod]
-        public void TestBacktest()
+        public void TestBacktests()
         {
-            var strategy = new TradeStrategyLib.Models.MAStrategy(25, 100, 1000000.00, 0.05);
+            var maStrategy = new TradeStrategyLib.Models.MAStrategy(25, 100, 1000000.00, 0.05);
+            var sarStrategy = new TradeStrategyLib.Models.ParabolicSARStrategy(20, 100, 5, 1000000.00, 0.05);
+            var bolStrategy = new TradeStrategyLib.Models.BollingerStrategy(25, 2, 2, 1000000.00, 0.05);
+
+            // run the tests sequentially
+            this.TestStrategy(maStrategy);
+            this.TestStrategy(sarStrategy);
+            this.TestStrategy(bolStrategy);
+        }
+
+        private void TestStrategy(TradeStrategyLib.Models.IStrategy strategy)
+        {
             var backtest = new StrategyBacktester(strategy, _data);
             backtest.Compute();
 

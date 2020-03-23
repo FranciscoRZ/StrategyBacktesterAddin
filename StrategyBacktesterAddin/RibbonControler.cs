@@ -12,6 +12,7 @@ namespace StrategyBacktesterAddin
     [ComVisible(true)]
     public class RibbonControler : CustomUI.ExcelRibbon
     {
+        #region Class Properties
         // Import parameters
         private string _ticker;
         private DateTime _startDate;
@@ -37,6 +38,7 @@ namespace StrategyBacktesterAddin
         private double? _SARAccFactorStep = null;
         private double? _SARAmount = null;
         private double? _SARTakeProfitInBps = null;
+        #endregion
 
         #region Import Data
         /// <summary>
@@ -598,5 +600,10 @@ namespace StrategyBacktesterAddin
         }
 
         #endregion
+
+        public void OnLaunchAllPress(CustomUI.IRibbonControl control)
+        {
+            MessageBox.Show("WARNING: Button not yet implemented");
+        }
     }
 }
