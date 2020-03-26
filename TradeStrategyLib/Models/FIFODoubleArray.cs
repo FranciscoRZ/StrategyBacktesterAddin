@@ -17,7 +17,7 @@ namespace TradeStrategyLib.Models
         /// Array storing all current values taken into account
         /// in the trade strategy.
         /// </summary>
-        private double[] _array;
+        private readonly double[] _array;
 
         /// <summary>
         /// The index of the last inserted value into the array
