@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using DataTypes;
-using System.Linq;
 
 namespace TradeStrategyLib.Models
 {

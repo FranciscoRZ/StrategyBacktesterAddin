@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-using DataTypes;
+﻿using DataTypes;
 
 namespace TradeStrategyLib.Models
 {
