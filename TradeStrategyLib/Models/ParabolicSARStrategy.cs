@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 
 using DataTypes;
+using System.Linq;
 
 namespace TradeStrategyLib.Models
 {
@@ -39,10 +39,10 @@ namespace TradeStrategyLib.Models
         /// <summary>
         /// FIFO collection with a all data to calculate the Extremum Point EP
         /// </summary>
-        public List<double> EPdata = new List<double>();
+        public List<double> epData = new List<double>();
 
         /// <summary>
-        /// Extremum Point calculated and stocked in EPdata
+        /// Extremum Point computed then stored in epData
         /// </summary>
         private double _ep;
 
@@ -75,7 +75,7 @@ namespace TradeStrategyLib.Models
             this._sarAccFactorLevel = SARAccFactor;
             this._sarMaxAccFactorLevel = SARMaxAccFactor;
             this._sarAccFactorStep = SARAccFactorStep;
-            this._sarHistory = new FIFODoubleArray(2);
+            this._sarHistory = new FIFODoubleArray(3);
             this._sarPricesHistory = new FIFODoubleArray(3);
         }
 
@@ -101,7 +101,7 @@ namespace TradeStrategyLib.Models
             else if (this._sarHistory.Get(1) == 0)
             {
                 this._ep = this._sarPricesHistory.Get(1);
-                this.EPdata.Add(this._ep);
+                this.epData.Add(this._ep);
 
                 // Get the SAR formula
                 this._sar = this._sarHistory.Get(0) + this._sarAccFactorLevel * (this._ep - this._sarHistory.Get(0));
@@ -117,16 +117,16 @@ namespace TradeStrategyLib.Models
                     // Same trend
                     if (this._sarHistory.Get(0) <= this._sarPricesHistory.Get(0))
                     {
-                        this._ep = Math.Max(this._sarPricesHistory.Get(2), this.EPdata.Max());
-                        this.EPdata.Add(this._ep);
+                        this._ep = Math.Max(this._sarPricesHistory.Get(2), this.epData.Max());
+                        this.epData.Add(this._ep);
                     }
 
                     // Different trend
                     else
                     {
                         this._ep = this._sarPricesHistory.Get(2);
-                        this.EPdata.Clear();
-                        this.EPdata.Add(this._ep);
+                        this.epData.Clear();
+                        this.epData.Add(this._ep);
                         // Accelerator Factor incrementation
                         if (this._sarAccFactorLevel + this._sarAccFactorStep <= this._sarMaxAccFactorLevel)
                         {
@@ -135,7 +135,7 @@ namespace TradeStrategyLib.Models
                     }
 
                     // Get the SAR formula
-                    this._sar = this._sarHistory.Get(0) + this.accFactor.Max() * (this.EPdata.Max() - this._sarHistory.Get(0));
+                    this._sar = this._sarHistory.Get(0) + this.accFactor.Max() * (this.epData.Max() - this._sarHistory.Get(0));
                     this._sarHistory.Put(this._sar);
                 }
 
@@ -144,15 +144,15 @@ namespace TradeStrategyLib.Models
                     // Same trend
                     if (this._sarHistory.Get(0) >= this._sarPricesHistory.Get(1))
                     {
-                        this._ep = Math.Min(this._sarPricesHistory.Get(2), this.EPdata.Min());
-                        this.EPdata.Add(this._ep);
+                        this._ep = Math.Min(this._sarPricesHistory.Get(2), this.epData.Min());
+                        this.epData.Add(this._ep);
                     }
                     // Different trend
                     else
                     {
                         this._ep = this._sarPricesHistory.Get(2);
-                        this.EPdata.Clear();
-                        this.EPdata.Add(this._ep);
+                        this.epData.Clear();
+                        this.epData.Add(this._ep);
                         // Accelerator Factor incrementation
                         if (this._sarAccFactorLevel + this._sarAccFactorStep <= this._sarMaxAccFactorLevel)
                         {
@@ -161,7 +161,7 @@ namespace TradeStrategyLib.Models
                     }
 
                     // Get the SAR formula
-                    this._sar = this._sarHistory.Get(0) + this.accFactor.Max() * (this.EPdata.Max() - this._sarHistory.Get(0));
+                    this._sar = this._sarHistory.Get(0) + this.accFactor.Max() * (this.epData.Max() - this._sarHistory.Get(0));
                     this._sarHistory.Put(this._sar);
                 }
 
@@ -179,7 +179,7 @@ namespace TradeStrategyLib.Models
 
             // We flip if there's a change in position
             // Buy signal
-            if (this._sarHistory.Get(1) <= this._sarPricesHistory.Get(2) && (!this._currentWay || // current way is sell
+            if (this._sarHistory.Get(2) <= this._sarPricesHistory.Get(2) && (!this._currentWay || // current way is sell
                                          this._currentTradeSituation == null)) // or there is no current trade situation
             {
                 // close exiting order
@@ -195,7 +195,7 @@ namespace TradeStrategyLib.Models
                 return true;
             }
             // Sell signal
-            else if (this._sarHistory.Get(1) > this._sarPricesHistory.Get(2) && (this._currentWay || // Current way is buy
+            else if (this._sarHistory.Get(2) > this._sarPricesHistory.Get(2) && (this._currentWay || // Current way is buy
                                               this._currentTradeSituation == null)) // or there is no current trade situation
             {
                 // Close existing order
