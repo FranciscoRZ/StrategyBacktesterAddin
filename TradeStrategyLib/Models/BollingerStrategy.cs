@@ -11,7 +11,7 @@ namespace TradeStrategyLib.Models
     /// Bollinger strategy 
     /// </summary>
     public class BollingerStrategy : StrategyBase
-    {        
+    {
         /// <summary>
         /// Short level of moving average
         /// </summary>
@@ -28,16 +28,20 @@ namespace TradeStrategyLib.Models
         private readonly int _lowerBound;
 
         /// <summary>
-        /// FIFO collection with a "short" history and all history
+        /// FIFO collection with a "short" history : _shortPricesHistory
         /// </summary>
         private readonly FIFODoubleArray _shortPricesHistory;
-        private readonly FIFODoubleArray _PricesHistory;
+
+        /// <summary>
+        /// Collection with the entire history of prices
+        /// </summary>
+        private List<double> _pricesHistory = new List<double>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MASrategy"/> class.
         /// Constructs a Moving Average strategy based on the long and short MA strategy
         /// parameters:
-        /// If closing price < mean + std_inf * std => Buy
+        /// If mean + std_inf * std > closing price  => Buy
         /// If closing price > mean + std_sup * std => Sell
         /// </summary>
         /// <param name="maShortLevel">ex 25</param>
@@ -52,7 +56,24 @@ namespace TradeStrategyLib.Models
             this._upperBound = bolUpperBound;
             this._lowerBound = bolLowerBound;
             this._shortPricesHistory = new FIFODoubleArray(this._shortLevel);
-            this._PricesHistory = new FIFODoubleArray(10000);
+        }
+
+        /// <summary>
+        /// Computes the Standard Deviation
+        /// </summary>
+        /// <param name="PricesHistory">List of the prices history.</param>
+        /// <returns>Standard Deviation of Prices History</returns>
+        public double StDev(List<double> PricesHistory)
+        {
+            double std = 0;
+            int count = PricesHistory.Count();
+            if (count > 1)
+            {
+                double avg = PricesHistory.Average();
+                double sum = PricesHistory.Sum(value => (value - avg) * (value - avg));
+                std = Math.Sqrt(sum / count);
+            }
+            return std;
         }
 
         /// <summary>
@@ -72,13 +93,13 @@ namespace TradeStrategyLib.Models
             double std_MA = this._shortPricesHistory.GetArrayVol();
 
             // Histo prices
-            this._PricesHistory.Put(arrivedQuote.ClosePrice);
+            this._pricesHistory.Add(arrivedQuote.ClosePrice);
 
             // std for all the period
-            double std = this._PricesHistory.GetArrayVol();
+            double std = StDev(this._pricesHistory);
 
             // mean for all the period
-            double mean = this._PricesHistory.GetArrayMean();
+            double mean = this._pricesHistory.Average();
 
             // Upper bound
             double up_bound = this._upperBound * std_MA;
