@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Globalization;
@@ -601,9 +603,58 @@ namespace StrategyBacktesterAddin
 
         #endregion
 
+        /// <summary>
+        /// Callback method for Launch All button.
+        /// Creates Task objects for each strategy backtest and runs them
+        /// asynchronously on a ThreadPool by calling the Run method.
+        /// Method is safe as long as <see cref="XLSingleton"/> 
+        /// and <see cref="DataWriter"/> implemenations remain thread-safe.
+        /// </summary>
+        /// <param name="control">Exposes the method to the ribbon</param>
         public void OnLaunchAllPress(CustomUI.IRibbonControl control)
         {
-            MessageBox.Show("WARNING: Button not yet implemented");
+            Task movingAverageWorker = Task.Run(() => TestMovingAverage(control));
+            Task parabolicSARWorker = Task.Run(() => TestParabolicSAR(control));
+            Task bollingerWorker = Task.Run(() => TestBollinger(control));
+
+            var movingAverageAwaiter = movingAverageWorker.GetAwaiter();
+            movingAverageAwaiter.OnCompleted(() =>
+            {
+                try
+                {
+                    movingAverageAwaiter.GetResult();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Moving Average calculation failed. Error message : " + e.Message);
+                }
+
+            });
+            var parabolicSARAwaiter = parabolicSARWorker.GetAwaiter();
+            parabolicSARAwaiter.OnCompleted(() =>
+            {
+                try
+                {
+                    parabolicSARAwaiter.GetResult();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Parabolic SAR calculation failed. Error message : " + e.Message);
+                }
+            });
+            var bollingerAwaiter = bollingerWorker.GetAwaiter();
+            bollingerAwaiter.OnCompleted(() =>
+            {
+                try
+                {
+                    bollingerAwaiter.GetResult();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Bollinger calculation failed. Error message : " + e.Message);
+                    ;
+                }
+            });
         }
     }
 }
