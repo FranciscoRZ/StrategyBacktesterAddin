@@ -9,8 +9,17 @@ namespace StrategyBacktesterAddin
     /// </summary>
     public sealed class XLSingleton
     {
+        /// <summary>
+        /// The Excel Application
+        /// </summary>
         public Excel.Application XLApp = (Excel.Application)ExcelDnaUtil.Application;
+        /// <summary>
+        /// The Excel workbook from and to which we'll write.
+        /// </summary>
         public Excel.Workbook XLWorkbook;
+
+        // Instance to be used throughout application
+        private static readonly XLSingleton _instance = new XLSingleton();
 
         /// <summary>
         /// Private constructor
@@ -20,22 +29,15 @@ namespace StrategyBacktesterAddin
             this.XLWorkbook = this.XLApp.ActiveWorkbook;
         }
 
-        public static XLSingleton Instance { get { return NestedXLSingleton.instance; } }
-
-        private class NestedXLSingleton
+        static XLSingleton()
         {
-            /// <summary>
-            /// Explicit static constructor to tell C# not to mark type as beforefieldinit
-            /// </summary>
-            static NestedXLSingleton()
-            {
-            }
-
-            /// <summary>
-            /// Instanciation happens on first call to instance, and never again.
-            /// </summary>
-            internal static readonly XLSingleton instance = new XLSingleton();
         }
+
+        /// <summary>
+        /// Getter for the instance of our class.
+        /// It returns the instance created on the first call to the method.
+        /// </summary>
+        public static XLSingleton Instance { get { return _instance; } }
 
     }
 }

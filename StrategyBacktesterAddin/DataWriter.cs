@@ -5,8 +5,16 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 namespace StrategyBacktesterAddin
 {
+    /// <summary>
+    /// Static class for writing results to workbook
+    /// </summary>
     public static class DataWriter
     {
+        /// <summary>
+        /// Adjusts input to shape Excel-Dna understands and can print
+        /// </summary>
+        /// <param name="input">1-D Input result for reshaping</param>
+        /// <returns>2-D version of input</returns>
         private static object[,] Make2DArray(object[] input)
         {
             object[,] output = new object[input.GetLength(0), 1];
@@ -17,6 +25,12 @@ namespace StrategyBacktesterAddin
             return output;
         }
 
+        /// <summary>
+        /// Writes the OHLCV daily historical data that was imported to workbook
+        /// in new worksheet
+        /// </summary>
+        /// <param name="ticker">Ticker for which data was imported</param>
+        /// <param name="data">Data that was imported</param>
         public static void WriteStockData(string ticker, List<DataTypes.Quote> data)
         {
             // Set up workbook
@@ -73,6 +87,14 @@ namespace StrategyBacktesterAddin
             XLSingleton.Instance.XLApp.ScreenUpdating = true;
         }
 
+        /// <summary>
+        /// Writes the results of a Backtests for a given trading strategy to the 
+        /// workbook.
+        /// </summary>
+        /// <param name="strategyName">The backtested strategy</param>
+        /// <param name="totalPnl">The total PnL of this strategy on this backtest</param>
+        /// <param name="pnlHistory">The pnl history of the strategy by trade on this backtest</param>
+        /// <param name="dates">The dates at which the trades were made </param>
         public static void WriteBacktestResults(string strategyName, double totalPnl,
                                                 List<double> pnlHistory, List<DateTime> dates)
         {

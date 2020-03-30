@@ -66,6 +66,10 @@
       <Project>{ce0a6d10-d120-40b3-93aa-d1b7e8119fc6}</Project>
       <Name>DataTypes</Name>
     </ProjectReference>
+    <ProjectReference Include="..\StrategyBacktesterAddin\StrategyBacktesterAddin.csproj">
+      <Project>{e76fc56a-3337-439d-9e6a-216dd186ee9e}</Project>
+      <Name>StrategyBacktesterAddin</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TradeStrategyLib\TradeStrategyLib.csproj">
       <Project>{001b37e2-1e3c-4ed7-b6e8-668bcda0c77e}</Project>
       <Name>TradeStrategyLib</Name>

@@ -44,10 +44,14 @@
                       size="large"
                       onAction="TestMovingAverage"
                       imageMso="ChartAreaChart" />
-              <editBox id="maShortLevel" label="MA Short Level" onChange="GetMAShortLevelValue" sizeString="WWWW" />
-              <editBox id="maLongLevel" label="MA Long Level" onChange="GetMALongLevelValue" sizeString="WWWW" />
-              <editBox id="maAmount" label="MA Amount" onChange="GetMAAmountValue" sizeString="WWWW" />
-              <editBox id="maTakeProfit" label="MA Take Profit in BPs" onChange="GetMATakeProfitValue" sizeString="WWWW" />
+              <editBox id="maShortLevel" label="MA Short Level" onChange="GetMAShortLevelValue" sizeString="WWWW"
+                       screentip="example: 20"/>
+              <editBox id="maLongLevel" label="MA Long Level" onChange="GetMALongLevelValue" sizeString="WWWW"
+                       screentip="example: 50"/>
+              <editBox id="maAmount" label="MA Amount" onChange="GetMAAmountValue" sizeString="WWWW" 
+                       screentip="Remember not to invest what you can't afford to lose :)"/>
+              <editBox id="maTakeProfit" label="MA Take Profit in BPs" onChange="GetMATakeProfitValue" sizeString="WWWW" 
+                       screentip="example: 0,05"/>
             </group>
             
             <group id='StrategyBacktesterLaunchSAR'
@@ -58,11 +62,16 @@
                       size="large"
                       onAction="TestParabolicSAR"
                       imageMso="ChartAreaChart" />
-              <editBox id="SARAccFactorLevel" label="SAR Acceleration Factor" onChange="GetSARAccFactorValue" sizeString="WWWW" />
-              <editBox id="SARMaxAccFactorLevel" label="SAR Max Acceleration Factor" onChange="GetSARMaxAccFactorValue" sizeString="WWWW" />
-              <editBox id="SARAccFactorStep" label="SAR Acceleration Factor Step" onChange="GetSARAccFactorStepValue" sizeString="WWWW" />
-              <editBox id="SARAmount" label="Parabolic SAR Amount" onChange="GetSARAmountValue" sizeString="WWWW" />
-              <editBox id="SARTakeProfit" label="SAR Take Profit in BPs" onChange="GetSARTakeProfitValue" sizeString="WWWW" />
+              <editBox id="SARAccFactorLevel" label="SAR Acceleration Factor" onChange="GetSARAccFactorValue" sizeString="WWWW" 
+                       screentip="Coefficient in Parabolic SAR formula. Example: 0,02"/>
+              <editBox id="SARMaxAccFactorLevel" label="SAR Max Acceleration Factor" onChange="GetSARMaxAccFactorValue" sizeString="WWWW" 
+                       screentip="Maximum value of the coefficient. Example: 0,2"/>
+              <editBox id="SARAccFactorStep" label="SAR Acceleration Factor Step" onChange="GetSARAccFactorStepValue" sizeString="WWWW" 
+                       screentip="Amount to increment Accelerator Factor at each trend switch. Example: 0,01"/>
+              <editBox id="SARAmount" label="Parabolic SAR Amount" onChange="GetSARAmountValue" sizeString="WWWW" 
+                       screentip="Please remember that past performance is not indicative of future results!"/>
+              <editBox id="SARTakeProfit" label="SAR Take Profit in BPs" onChange="GetSARTakeProfitValue" sizeString="WWWW" 
+                       screentip="example: 0,05"/>
             </group>
             
             <group id='StrategyBacktesterLaunchBollinger'
@@ -73,11 +82,16 @@
                       size="large"
                       onAction="TestBollinger"
                       imageMso="ChartAreaChart" />
-              <editBox id="bolShortLevel" label="MA Short Level" onChange="GetBolShortLevelValue" sizeString="WWWW" />
-              <editBox id="bolUpper_bound" label="x / upper_bound = x*sigma:" onChange="GetBolUpperBoundValue" sizeString="WWWW" />
-              <editBox id="bolLower_bound" label="y / lower_bound = -y*sigma:" onChange="GetBolLowerBoundValue" sizeString="WWWW" />
-              <editBox id="bolAmount" label="Bollinger Amount" onChange="GetBolAmountValue" sizeString="WWWW" />
-              <editBox id="bolTakeProfit" label="Bollinger Take Profit in BPs" onChange="GetBolTakeProfitValue" sizeString="WWWW" />
+              <editBox id="bolShortLevel" label="MA Short Level" onChange="GetBolShortLevelValue" sizeString="WWWW" 
+                       screentip="example: 20"/>
+              <editBox id="bolUpper_bound" label="x / upper_bound = x*sigma:" onChange="GetBolUpperBoundValue" sizeString="WWWW" 
+                       screentip="2"/>
+              <editBox id="bolLower_bound" label="y / lower_bound = -y*sigma:" onChange="GetBolLowerBoundValue" sizeString="WWWW"
+                       screentip="2"/>
+              <editBox id="bolAmount" label="Bollinger Amount" onChange="GetBolAmountValue" sizeString="WWWW" 
+                       screentip="Tony Stark dies :'("/>
+              <editBox id="bolTakeProfit" label="Bollinger Take Profit in BPs" onChange="GetBolTakeProfitValue" sizeString="WWWW"
+                       screentip="0,05"/>
             </group>
 
           </tab>

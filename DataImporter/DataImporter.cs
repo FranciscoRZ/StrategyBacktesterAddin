@@ -8,6 +8,11 @@ using System.Net;
 
 namespace DataImporter
 {
+    /// <summary>
+    /// Singleton class for importing data.
+    /// Currently only implemented to handle AlphaVantage historical data
+    /// API.
+    /// </summary>
     public sealed class DataImporter
     {
         private string _key;
@@ -15,11 +20,21 @@ namespace DataImporter
         // Instance to used throughout application
         private static readonly DataImporter instance = new DataImporter();
 
+        /// <summary>
+        /// Gets the full imported dataset as requested per user
+        /// </summary>
+        /// <returns>Full historical dataset of daily OHLCV for requested ticker</returns>
         public List<DataTypes.Quote> GetData()
         {
             return this._data;
         }
 
+        /// <summary>
+        /// Imports daily OHLCV for requested ticker between start date and end date
+        /// </summary>
+        /// <param name="symbol">The ticker to import</param>
+        /// <param name="startDate">The first date for dataset</param>
+        /// <param name="endDate">The last date for dataset</param>
         public void ImportData(string symbol, DateTime startDate, DateTime endDate)
         {
             ReadConfig();
@@ -56,12 +71,19 @@ namespace DataImporter
             }
         }
 
+        /// <summary>
+        /// Reads the API key for importing data
+        /// </summary>
         private void ReadConfig()
         {
             this._key = ConfigurationManager.AppSettings.Get("AVKey2");
         }
 
         // Implement Singleton pattern
+        
+        /// <summary>
+        /// Private constructor disallows instanciation
+        /// </summary>
         private DataImporter()
         {
         }
@@ -70,6 +92,10 @@ namespace DataImporter
         {
         }
 
+        /// <summary>
+        /// The instance is the one created on the first call to instance
+        /// </summary>
+        /// <returns><see cref="DataImporter"/> instance</returns>
         public static DataImporter Instance
         {
             get

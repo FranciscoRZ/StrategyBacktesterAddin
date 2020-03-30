@@ -62,7 +62,7 @@ namespace TradeStrategyLib.Models
         /// Computes the Standard Deviation
         /// </summary>
         /// <param name="PricesHistory">List of the prices history.</param>
-        /// <returns>Standard Deviation of Prices History</returns>
+        /// <returns><see cref="double"/> Standard Deviation of Prices History</returns>
         public double StDev(List<double> PricesHistory)
         {
             double std = 0;
@@ -80,7 +80,7 @@ namespace TradeStrategyLib.Models
         /// Computes the indicator and steps through the strategy (Open or Close position)
         /// </summary>
         /// <param name="arrivedQuote">Used to update all the parameters of the trading strategy.</param>
-        /// <returns>true if the position is opened (or flipped), false otherwise</returns>
+        /// <returns><see cref="bool"/> true if the position is opened (or flipped), false otherwise</returns>
         public override bool Step(Quote arrivedQuote)
         {
             // Update the data arrays

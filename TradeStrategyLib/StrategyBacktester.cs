@@ -10,6 +10,7 @@ namespace TradeStrategyLib
         /// The strategy to backtest
         /// </summary>
         private readonly Models.IStrategy _strategy;
+
         /// <summary>
         /// The market data to use
         /// </summary>
@@ -38,6 +39,10 @@ namespace TradeStrategyLib
             this._strategy.ForceClosePosition(this._data.Last());
         }
 
+        /// <summary>
+        /// Gets all the dates in the trade history of the backtest
+        /// </summary>
+        /// <returns><see cref="List{DateTime}"/> of all dates in trade history</returns>
         public List<DateTime> GetDates()
         {
             var dates = new List<DateTime>();
@@ -51,7 +56,7 @@ namespace TradeStrategyLib
         /// <summary>
         /// Gets the pnl history of the trade
         /// </summary>
-        /// <returns></returns>
+        /// <returns><see cref="List{double}">List of the pnl of all the trades in backtest</returns>
         public List<double> GetPnLHistory()
         {
             List<Models.ITradeSituation> tradeHistory = this._strategy.GetTradeSituationHistory;
@@ -66,7 +71,7 @@ namespace TradeStrategyLib
         /// <summary>
         /// Gets the total pnl of the strategy
         /// </summary>
-        /// <returns></returns>
+        /// <returns><see cref="double"/> Total Pnl of the strategy</returns>
         public double GetTotalPnl()
         {
             return this._strategy.GetPnL();

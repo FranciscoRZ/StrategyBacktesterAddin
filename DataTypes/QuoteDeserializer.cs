@@ -8,6 +8,11 @@ namespace DataTypes
     /// </summary>
     public static class QuoteDeserializer
     {
+        /// <summary>
+        /// Deserialies incoming quotes from AlphaVantage API
+        /// </summary>
+        /// <param name="input">HTTP response from AlphaVantage API</param>
+        /// <returns></returns>
         public static Quote DeserializeAlphaVantage(string input)
         {
             var quote = new Quote();

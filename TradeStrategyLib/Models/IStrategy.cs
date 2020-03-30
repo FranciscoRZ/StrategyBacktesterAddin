@@ -24,16 +24,8 @@ namespace TradeStrategyLib.Models
         /// Computes indicator and steps through strategy (open / close / nothing).
         /// </summary>
         /// <param name="arrivedQuote">Quote that has just arrived</param>
-        /// <returns>true: There is an action to take (buy or sell). False: no action to take  </returns>
+        /// <returns><see cref="bool"/> true: There is an action to take (buy or sell). False: no action to take  </returns>
         bool Step(Quote arrivedQuote);
-
-        /// <summary>
-        /// This method is used to save all the calculations (including the results of 
-        /// the positions [Trade Situations] in a text form. Please note that it's very 
-        /// heavy in load and execution as it has to work with strings and then text files.
-        /// </summary>
-        /// <returns>Text representation of your trading strategy run.</returns>
-        string OutputStrategyCalculations();
 
         /// <summary>
         /// Force close any hanging position: in case there would be any open positions.

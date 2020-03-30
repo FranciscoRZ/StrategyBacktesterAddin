@@ -63,7 +63,7 @@ namespace TradeStrategyLib.Models
         /// <summary>
         /// Computes and returns the total PnL of the strategy
         /// </summary>
-        /// <returns></returns>
+        /// <returns><see cref="double"/>Total PnL of strategy</returns>
         public double GetPnL()
         {
             double pnlInBps = 0.00;
@@ -75,19 +75,10 @@ namespace TradeStrategyLib.Models
         }
 
         /// <summary>
-        /// Outputs all the calculations
-        /// </summary>
-        /// <returns></returns>
-        public string OutputStrategyCalculations()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Computes the indicator and steps through the strategy (open or close the position)
         /// </summary>
         /// <param name="arrivedQuote">USed to update all the parameters for the trading strategy</param>
-        /// <returns>true if the position if opened (or flipped), false otherwise</returns>
+        /// <returns><see cref="bool"/> true if the position if opened (or flipped), false otherwise</returns>
         public abstract bool Step(Quote arrivedQuote);
 
         protected StrategyBase(double tpInBps, double amount)

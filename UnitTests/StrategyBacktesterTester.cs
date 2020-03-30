@@ -26,6 +26,10 @@ namespace UnitTests
         ///</summary>
         public TestContext TestContext { get; set; }
 
+        /// <summary>
+        /// Initialize class for backtests
+        /// </summary>
+        /// <param name="testContext"></param>
         [ClassInitialize]
         public static void InitClass(TestContext testContext)
         {
@@ -53,6 +57,10 @@ namespace UnitTests
             this.TestStrategy(bolStrategy);
         }
 
+        /// <summary>
+        /// Tests whether given strategy can be correctly backtested
+        /// </summary>
+        /// <param name="strategy"></param>
         private void TestStrategy(TradeStrategyLib.Models.IStrategy strategy)
         {
             var backtest = new StrategyBacktester(strategy, _data);

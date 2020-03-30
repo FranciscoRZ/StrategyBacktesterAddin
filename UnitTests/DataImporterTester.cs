@@ -13,6 +13,9 @@ namespace UnitTests
         private DateTime _endDate;
         private CultureInfo _culture;
 
+        /// <summary>
+        /// Set up the class for import before each test
+        /// </summary>
         [TestInitialize]
         public void SetUp()
         {
@@ -22,6 +25,9 @@ namespace UnitTests
             this._endDate = DateTime.Parse("02/02/2020", this._culture);
         }
 
+        /// <summary>
+        /// Tests wheter the data is correctly imported
+        /// </summary>
         [TestMethod]
         public void TestImportData()
         {
@@ -32,6 +38,21 @@ namespace UnitTests
             var data = importerInstance.GetData();
 
             Assert.IsNotNull(data);
+        }
+
+        /// <summary>
+        /// Tests whether the singleton pattern is well implemented.
+        /// </summary>
+        [TestMethod]
+        public void TestSingletonPattern()
+        {
+            // get first reference to instance of Importer
+            var firstRef = DataImporter.DataImporter.Instance;
+
+            // get second reference to instance of Importer
+            var secondRef = DataImporter.DataImporter.Instance;
+
+            Assert.ReferenceEquals(firstRef.GetData(), secondRef.GetData());
         }
     }
 }

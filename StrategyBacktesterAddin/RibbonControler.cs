@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -11,6 +10,9 @@ using TradeStrategyLib;
 
 namespace StrategyBacktesterAddin
 {
+    /// <summary>
+    /// Class contains all the callback functions of the buttons in our ribbon
+    /// </summary>
     [ComVisible(true)]
     public class RibbonControler : CustomUI.ExcelRibbon
     {

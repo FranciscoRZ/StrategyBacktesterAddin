@@ -180,7 +180,7 @@ namespace TradeStrategyLib.Models
         /// Updates the pnl, maxdd and other values and parameters of this object.
         /// </summary>
         /// <param name="quote"></param>
-        /// <returns>True if the position if closed as a result of this new information.
+        /// <returns><see cref="bool"/> True if the position if closed as a result of this new information.
         /// False otherwise</returns>
         public bool UpdateOnOrder(Quote quote)
         {
@@ -216,7 +216,7 @@ namespace TradeStrategyLib.Models
         /// Calculates and updates the Max Draw Down parameter
         /// </summary>
         /// <param name="quote">Reference quote for Max DD calculation</param>
-        /// <returns>Calculated max draw down if applicable</returns>
+        /// <returns><see cref="double"/>Calculated max draw down if applicable</returns>
         protected double CalculateMaxDD(Quote quote)
         {
             // already closed? return the dd that was already calculated.
@@ -250,7 +250,7 @@ namespace TradeStrategyLib.Models
         /// <summary>
         /// Calculates and updates the Profit and Loss variable
         /// </summary>
-        /// <returns>Calculated PnL for a closed position</returns>
+        /// <returns><see cref="double"/>Calculated PnL for a closed position</returns>
         protected double CalculatePnL()
         {
             if (this._isClosed)
@@ -270,7 +270,7 @@ namespace TradeStrategyLib.Models
         /// Calculates and updates the Profit and Loss variable.
         /// </summary>
         /// <param name="quote">In regard of this quote</param>
-        /// <returns>Calculated pnl</returns>
+        /// <returns><see cref="double"/> Calculated pnl</returns>
         protected double CalculatePnL(Quote quote)
         {
             this.pnlInBps = this._isLongTrade ? quote.ClosePrice - this._executedOpenQuote.ClosePrice
@@ -279,21 +279,5 @@ namespace TradeStrategyLib.Models
         }
 
         #endregion
-
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-            sb.Append("Way:");
-            sb.Append(this._isLongTrade ? "LONG" : "SHORT");
-            sb.Append(";Entry price");
-            sb.Append(string.Format("{0:0.######}", this._executedOpenQuote.ClosePrice));
-            sb.Append(";Exit price");
-            sb.Append(string.Format("{0:0.######}", this._executedCloseQuote.ClosePrice));
-            sb.Append(";Max DD:)");
-            sb.Append(string.Format("{0:0.######}", this._maxDDinBps));
-            sb.Append(";Profit or loss:");
-            sb.Append(string.Format("{0:0.######}", this.pnlInBps));
-            return sb.ToString();
-        }
     }
 }
