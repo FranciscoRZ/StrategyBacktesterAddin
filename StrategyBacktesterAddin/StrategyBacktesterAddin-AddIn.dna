@@ -51,7 +51,7 @@
               <editBox id="maAmount" label="MA Amount" onChange="GetMAAmountValue" sizeString="WWWW" 
                        screentip="Remember not to invest what you can't afford to lose :)"/>
               <editBox id="maTakeProfit" label="MA Take Profit in BPs" onChange="GetMATakeProfitValue" sizeString="WWWW" 
-                       supertip="example: 0,05"/>
+                       supertip="example: 150"/>
             </group>
             
             <group id='StrategyBacktesterLaunchSAR'
@@ -71,7 +71,7 @@
               <editBox id="SARAmount" label="Parabolic SAR Amount" onChange="GetSARAmountValue" sizeString="WWWW" 
                        screentip="Please remember that past performance is not indicative of future results!"/>
               <editBox id="SARTakeProfit" label="SAR Take Profit in BPs" onChange="GetSARTakeProfitValue" sizeString="WWWW" 
-                       supertip="example: 0,05"/>
+                       supertip="example: 150"/>
             </group>
             
             <group id='StrategyBacktesterLaunchBollinger'
@@ -91,7 +91,7 @@
               <editBox id="bolAmount" label="Bollinger Amount" onChange="GetBolAmountValue" sizeString="WWWW" 
                        screentip="Tony Stark dies :'("/>
               <editBox id="bolTakeProfit" label="Bollinger Take Profit in BPs" onChange="GetBolTakeProfitValue" sizeString="WWWW"
-                       supertip="example: 0,05"/>
+                       supertip="example: 150"/>
             </group>
 
           </tab>

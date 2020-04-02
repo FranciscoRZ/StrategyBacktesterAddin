@@ -147,15 +147,20 @@ namespace StrategyBacktesterAddin
             ws.Range["C2"].Resize[dates2D.GetLength(0), 1].Value2 = dates2D;
             ws.Range["D2"].Resize[pnlHistory2D.GetLength(0), 1].Value2 = pnlHistory2D;
 
-            ws.Range["B3"].Value2 = "Maximum Drawdown";
-            ws.Range["B4"].Value2 = (object)maxDD;
-            ws.Range["B5"].Value2 = "Volatility";
-            ws.Range["B6"].Value2 = (object)vol;
-
             // Format the worksheet
             ws.Range["B2"].NumberFormat = "#,##0.00";
             ws.Range["C2"].Resize[dates2D.GetLength(0), 1].NumberFormat = "dd/mm/yyyy";
             ws.Range["D2"].Resize[pnlHistory2D.GetLength(0), 1].NumberFormat = "0.00%";
+
+            // Write summary statistics and format
+            ws.Range["B3"].Value2 = "Maximum Drawdown";
+            ws.Range["B3"].Font.Bold = true;
+            ws.Range["B4"].Value2 = (object)maxDD;
+            ws.Range["B4"].NumberFormat = "#,##0.00";
+            ws.Range["B5"].Value2 = "Volatility";
+            ws.Range["B5"].Font.Bold = true;
+            ws.Range["B6"].Value2 = (object)vol;
+            ws.Range["B6"].NumberFormat = "0.00%";
 
             // Show results
             XLSingleton.Instance.XLApp.ScreenUpdating = true;

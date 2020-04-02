@@ -186,13 +186,13 @@ namespace TradeStrategyLib.Models
         {
             this.CalculateMaxDD(quote);
             this.CalculatePnL(quote);
-            if (this._isLongTrade && this._executedOpenQuote.ClosePrice + this._tpInBps <= quote.ClosePrice)
+            if (this._isLongTrade && this._executedOpenQuote.ClosePrice * (1 + this._tpInBps / 10000) <= quote.ClosePrice)
             {
                 // we bought and the position can be closed with this order
                 this.ClosePosition(quote);
                 return true;
             }
-            else if (!this._isLongTrade && this._executedOpenQuote.ClosePrice - this._tpInBps > quote.ClosePrice)
+            else if (!this._isLongTrade && this._executedOpenQuote.ClosePrice * (1 - this._tpInBps / 10000) > quote.ClosePrice)
             {
                 // we sold and the position can be closed with this order
                 this.ClosePosition(quote);
