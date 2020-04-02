@@ -41,29 +41,53 @@ namespace UnitTests
         }
         
         /// <summary>
-        /// Tests that each strategy can be correctly backtested with the 
-        /// <see cref="StrategyBacktester"/> backtester class.
+        /// Tests whether given strategy can be correctly backtested
         /// </summary>
         [TestMethod]
-        public void TestBacktests()
+        public void TestBollingerStrategy()
         {
-            var maStrategy = new TradeStrategyLib.Models.MAStrategy(25, 100, 1000000.00, 0.05);
-            var sarStrategy = new TradeStrategyLib.Models.ParabolicSARStrategy(20, 100, 5, 1000000.00, 0.05);
             var bolStrategy = new TradeStrategyLib.Models.BollingerStrategy(25, 2, 2, 1000000.00, 0.05);
+            var backtest = new StrategyBacktester(bolStrategy, _data);
+            backtest.Compute();
 
-            // run the tests sequentially
-            this.TestStrategy(maStrategy);
-            this.TestStrategy(sarStrategy);
-            this.TestStrategy(bolStrategy);
+            var pnlHistory = backtest.GetPnLHistory();
+            var totalPnl = backtest.GetTotalPnl();
+
+            // Check if results are empty
+            // NOTE FRZ: This test should be more rigorous with expected results to test
+            // but I don't have the time.
+            Assert.IsNotNull(pnlHistory);
+            Assert.IsNotNull(totalPnl);
         }
 
         /// <summary>
         /// Tests whether given strategy can be correctly backtested
         /// </summary>
-        /// <param name="strategy"></param>
-        private void TestStrategy(TradeStrategyLib.Models.IStrategy strategy)
+        [TestMethod]
+        public void TestSARStrategy()
         {
-            var backtest = new StrategyBacktester(strategy, _data);
+            var sarStrategy = new TradeStrategyLib.Models.ParabolicSARStrategy(20, 100, 5, 1000000.00, 0.05);
+            var backtest = new StrategyBacktester(sarStrategy, _data);
+            backtest.Compute();
+
+            var pnlHistory = backtest.GetPnLHistory();
+            var totalPnl = backtest.GetTotalPnl();
+
+            // Check if results are empty
+            // NOTE FRZ: This test should be more rigorous with expected results to test
+            // but I don't have the time.
+            Assert.IsNotNull(pnlHistory);
+            Assert.IsNotNull(totalPnl);
+        }
+
+        /// <summary>
+        /// Tests whether given strategy can be correctly backtested
+        /// </summary>
+        [TestMethod]
+        public void TestMAStrategy()
+        {
+            var maStrategy = new TradeStrategyLib.Models.MAStrategy(25, 100, 1000000.00, 0.05);
+            var backtest = new StrategyBacktester(maStrategy, _data);
             backtest.Compute();
 
             var pnlHistory = backtest.GetPnLHistory();

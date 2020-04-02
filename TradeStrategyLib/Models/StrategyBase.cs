@@ -58,7 +58,8 @@ namespace TradeStrategyLib.Models
         /// <param name="quote"></param>
         public void ForceClosePosition(Quote quote)
         {
-            this._currentTradeSituation.ClosePosition(quote);
+            if (this._currentTradeSituation != null)
+                this._currentTradeSituation.ClosePosition(quote);
         }
 
         /// <summary>
