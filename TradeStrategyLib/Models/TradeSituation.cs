@@ -213,7 +213,7 @@ namespace TradeStrategyLib.Models
         }
 
         /// <summary>
-        /// Calculates and updates the Max Draw Down parameter
+        /// Calculates and updates the Max Draw Down property
         /// </summary>
         /// <param name="quote">Reference quote for Max DD calculation</param>
         /// <returns><see cref="double"/>Calculated max draw down if applicable</returns>
@@ -233,17 +233,16 @@ namespace TradeStrategyLib.Models
                     // the situation is worse
                     this._maxDDinBps = quote.ClosePrice - this._executedOpenQuote.ClosePrice;
                 }
-                else
+            }
+            else
+            {
+                // this is the order that can close the position (short position)
+                if (this._executedOpenQuote.ClosePrice - quote.ClosePrice < this._maxDDinBps)
                 {
-                    // this is the order that can close the position (short position)
-                    if (this._executedOpenQuote.ClosePrice - quote.ClosePrice < this._maxDDinBps)
-                    {
-                        // the situation is worse
-                        this._maxDDinBps = this._executedOpenQuote.ClosePrice - quote.ClosePrice;
-                    }
+                    // the situation is worse
+                    this._maxDDinBps = this._executedOpenQuote.ClosePrice - quote.ClosePrice;
                 }
             }
-
             return 0.00;
         }
 

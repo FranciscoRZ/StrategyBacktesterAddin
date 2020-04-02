@@ -1,4 +1,5 @@
-﻿using DataTypes;
+﻿using System.Collections.Generic;
+using DataTypes;
 
 namespace TradeStrategyLib.Models
 {
@@ -26,6 +27,11 @@ namespace TradeStrategyLib.Models
         /// FIFO collection with a "short" history
         /// </summary>
         private readonly FIFODoubleArray _shortPricesHistory;
+
+        /// <summary>
+        /// List with the entire history of prices
+        /// </summary>
+        private List<double> _priceHistory = new List<double>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MASrategy"/> class.
@@ -57,6 +63,7 @@ namespace TradeStrategyLib.Models
             // Update the data arrays
             this._longPricesHistory.Put(arrivedQuote.ClosePrice);
             this._shortPricesHistory.Put(arrivedQuote.ClosePrice);
+            this._priceHistory.Add(arrivedQuote.ClosePrice);
 
             // Get the MAs for strategy
             double shortMean = this._shortPricesHistory.GetArrayMean();
@@ -72,37 +79,42 @@ namespace TradeStrategyLib.Models
                 }
             }
 
-            // We flip if there's a change in position
-            if (shortMean > longMean && (!this._currentWay || // current way is sell
-                                         this._currentTradeSituation == null)) // or there is no current trade situation
+            // Check if there's enough data for first signal
+            if (this._priceHistory.Count >= this._longLevel)
             {
-                // close exiting order
-                if (this._currentTradeSituation != null)
+                // We flip if there's a change in position
+                if (shortMean > longMean && (!this._currentWay || // current way is sell
+                                             this._currentTradeSituation == null)) // or there is no current trade situation
                 {
-                    this._currentTradeSituation.ClosePosition(arrivedQuote);
-                }
+                    // close exiting order
+                    if (this._currentTradeSituation != null)
+                    {
+                        this._currentTradeSituation.ClosePosition(arrivedQuote);
+                    }
 
-                // Open position
-                this._currentWay = true;
-                this._currentTradeSituation = new TradeSituation(arrivedQuote, true, this._tpInBps);
-                this._tradeSituationHistory.Add(this._currentTradeSituation);
-                return true;
-            }
-            else if (shortMean < longMean && (this._currentWay|| 
-                                              this._currentTradeSituation == null))
-            {
-                // Close existing order
-                if (this._currentTradeSituation != null)
+                    // Open position
+                    this._currentWay = true;
+                    this._currentTradeSituation = new TradeSituation(arrivedQuote, true, this._tpInBps);
+                    this._tradeSituationHistory.Add(this._currentTradeSituation);
+                    return true;
+                }
+                else if (shortMean < longMean && (this._currentWay ||
+                                                  this._currentTradeSituation == null))
                 {
-                    this._currentTradeSituation.ClosePosition(arrivedQuote);
-                }
+                    // Close existing order
+                    if (this._currentTradeSituation != null)
+                    {
+                        this._currentTradeSituation.ClosePosition(arrivedQuote);
+                    }
 
-                // Open position
-                this._currentWay = false;
-                this._currentTradeSituation = new TradeSituation(arrivedQuote, false, this._tpInBps);
-                this._tradeSituationHistory.Add(this._currentTradeSituation);
-                return true;
+                    // Open position
+                    this._currentWay = false;
+                    this._currentTradeSituation = new TradeSituation(arrivedQuote, false, this._tpInBps);
+                    this._tradeSituationHistory.Add(this._currentTradeSituation);
+                    return true;
+                }
             }
+            
             return false;
         }        
     }

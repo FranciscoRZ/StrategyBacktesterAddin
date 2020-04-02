@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Excel = Microsoft.Office.Interop.Excel;
@@ -110,10 +110,10 @@ namespace StrategyBacktesterAddin
         /// <param name="totalPnl">The total PnL of this strategy on this backtest</param>
         /// <param name="pnlHistory">The pnl history of the strategy by trade on this backtest</param>
         /// <param name="dates">The dates at which the trades were made </param>
-        public static void WriteBacktestResults(string strategyName, double totalPnl, 
-                                                List<double> pnlHistory, List<DateTime> dates)
+        public static void WriteBacktestResults(string strategyName, double totalPnl, double maxDD, 
+                                                double vol, List<double> pnlHistory, List<DateTime> dates)
         {
-            _writeBacktestResults(strategyName, totalPnl, pnlHistory, dates);
+            _writeBacktestResults(strategyName, totalPnl, maxDD, vol, pnlHistory, dates);
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }
@@ -127,7 +127,7 @@ namespace StrategyBacktesterAddin
         /// <param name="pnlHistory">The pnl history of the strategy by trade on this backtest</param>
         /// <param name="dates">The dates at which the trades were made </param>
         private static void _writeBacktestResults(string strategyName, double totalPnl,
-                                                List<double> pnlHistory, List<DateTime> dates)
+                                                  double maxDD, double vol, List<double> pnlHistory, List<DateTime> dates)
         {
             // Set up workbook
             XLSingleton.Instance.XLApp.ScreenUpdating = false;
@@ -146,6 +146,11 @@ namespace StrategyBacktesterAddin
             ws.Range["B2"].Value2 = (object)totalPnl;
             ws.Range["C2"].Resize[dates2D.GetLength(0), 1].Value2 = dates2D;
             ws.Range["D2"].Resize[pnlHistory2D.GetLength(0), 1].Value2 = pnlHistory2D;
+
+            ws.Range["B3"].Value2 = "Maximum Drawdown";
+            ws.Range["B4"].Value2 = (object)maxDD;
+            ws.Range["B5"].Value2 = "Volatility";
+            ws.Range["B6"].Value2 = (object)vol;
 
             // Format the worksheet
             ws.Range["B2"].NumberFormat = "#,##0.00";

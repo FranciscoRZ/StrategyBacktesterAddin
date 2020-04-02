@@ -41,7 +41,7 @@ namespace TradeStrategyLib.Models
         public void Put(double value)
         {
             this._array[this._arrayLastInsertedIndex++] = value;
-            if (this._arrayLastInsertedIndex == this._arrayLastIndex)
+            if (this._arrayLastInsertedIndex == this._arrayLastIndex + 1)
             {
                 this._arrayLastInsertedIndex = 0;
             }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using DataTypes;
@@ -72,6 +73,49 @@ namespace TradeStrategyLib.Models
                 pnlInBps += tradeSituation.GetOrderPnlInBps;
             }
             return pnlInBps * this._amount;
+        }
+
+        /// <summary>
+        /// Compute the strategy's maximum drawdown as defined by the single 
+        /// greatest drawdown in the strategy's trades
+        /// </summary>
+        /// <returns><see cref="double"/>the strategy's Maximum Drawdown</returns>
+        public double GetMaximumDrawdown()
+        {
+            return -this._tradeSituationHistory.Select(x => x.GetMaxDrawDown).Min();
+        }
+        
+        /// <summary>
+        /// Computes the standard deviation of an enumerable
+        /// </summary>
+        /// <returns><see cref="double"/>The standard deviation</returns>
+        private double ComputeStandardDeviation(IEnumerable<double> data)
+        {
+            double std = 0.0;
+
+            if (data.Any())
+            {
+                double mean = data.Average();
+                double sum = 0.0;
+                foreach (double dot in data)
+                {
+                    sum += Math.Pow(dot - mean, 2);
+                }
+                std = sum / (data.Count() - 1);
+                std = Math.Sqrt(std);
+            }
+
+            return std;
+        }
+
+        /// <summary>
+        /// Compute the strategy's volatility as the standard deviation of the 
+        /// strategy's order's pnl
+        /// </summary>
+        /// <returns><see cref="double"/>The strategy's volatility</returns>
+        public double GetStrategyVol()
+        {
+            return ComputeStandardDeviation(this._tradeSituationHistory.Select(x => x.GetOrderPnlInBps));
         }
 
         /// <summary>

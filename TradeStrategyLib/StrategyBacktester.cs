@@ -76,5 +76,24 @@ namespace TradeStrategyLib
         {
             return this._strategy.GetPnL();
         }
+
+        /// <summary>
+        /// Gets the strategy's maximum drawdown
+        /// </summary>
+        /// <returns><see cref="double"/>Maximum DD of the strategy</returns>
+        public double GetMaximumDrawdown()
+        {
+            return this._strategy.GetMaximumDrawdown();
+        }
+
+        /// <summary>
+        /// Gets the strategy's volatility
+        /// </summary>
+        /// <returns><see cref="double"/>The strategy's volatility</returns>
+        public double GetStrategyVol()
+        {
+            return this._strategy.GetStrategyVol();
+        }
+
     }
 }

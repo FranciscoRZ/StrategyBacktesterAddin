@@ -54,7 +54,7 @@ namespace TradeStrategyLib.Models
         bool IsClosed { get; }
 
         /// <summary>
-        /// Gets a value indicating whether the position is closed.
+        /// Gets a the Max draw down.
         /// </summary>
         double GetMaxDrawDown { get; }
 

@@ -39,5 +39,19 @@ namespace TradeStrategyLib.Models
         /// </summary>
         /// <returns>Returns PnL of strategy</returns>
         double GetPnL();
+
+        /// <summary>
+        /// Returns the Maximum Drawdown of the strategy as defined by the single 
+        /// maximum drawdown in the strategy's trade history
+        /// </summary>
+        /// <returns><see cref="double"/>The strategy's maximum drawdown</returns>
+        double GetMaximumDrawdown();
+
+        /// <summary>
+        /// Compute the strategy's volatility as the standard deviation of the 
+        /// strategy's order's pnl
+        /// </summary>
+        /// <returns><see cref="double"/>The strategy's volatility</returns>
+        double GetStrategyVol();
     }
 }

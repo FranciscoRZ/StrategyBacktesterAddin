@@ -12,7 +12,7 @@ namespace StrategyBacktesterAddin
 {
     /// <summary>
     /// Class contains all the callback functions of the buttons in our ribbon
-    /// </summary>
+    /// </summary>   
     [ComVisible(true)]
     public class RibbonControler : CustomUI.ExcelRibbon
     {
@@ -31,8 +31,8 @@ namespace StrategyBacktesterAddin
 
         // Bollinger parameters
         private int? _bolShortLevel = null;
-        private int? _bolUpperBound = null;
-        private int? _bolLowerBound = null;
+        private double? _bolUpperBound = null;
+        private double? _bolLowerBound = null;
         private double? _bolAmount = null;
         private double? _bolTakeProfitInBps = null;
 
@@ -55,9 +55,14 @@ namespace StrategyBacktesterAddin
             // Get instance of importer
             var importer = DataImporter.DataImporter.Instance;
             importer.ImportData(_ticker, _startDate, _endDate);
-            //Model.TimeSeriesEntry[] data = importer.GetData();
+            
+            // Get the data and write it
             var data = importer.GetData();
             DataWriter.WriteStockData(_ticker, data);
+
+            // Ensure all COM objects are released
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
 
         /// <summary>
@@ -167,11 +172,13 @@ namespace StrategyBacktesterAddin
             List<double> pnlHistory = backtest.GetPnLHistory();
             List<DateTime> dates = backtest.GetDates();
             double totalPnl = backtest.GetTotalPnl();
+            double maxDD = backtest.GetMaximumDrawdown();
+            double vol = backtest.GetStrategyVol();
 
             // Write the results
-            DataWriter.WriteBacktestResults("Moving Average", totalPnl, pnlHistory, dates);
+            DataWriter.WriteBacktestResults("Moving Average", totalPnl, maxDD, vol, pnlHistory, dates);
 
-            // If any COM objects remain try to collect them here
+            // Ensure all COM objects are released
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }
@@ -313,8 +320,8 @@ namespace StrategyBacktesterAddin
             #endregion
 
             // Compute the backtest and get the results
-            var bol_Strategy = new TradeStrategyLib.Models.BollingerStrategy((int)this._bolShortLevel, (int)this._bolUpperBound,
-                                                                         (int)this._bolLowerBound, (double)this._bolAmount,
+            var bol_Strategy = new TradeStrategyLib.Models.BollingerStrategy((int)this._bolShortLevel, (double)this._bolUpperBound,
+                                                                         (double)this._bolLowerBound, (double)this._bolAmount,
                                                                          (double)this._bolTakeProfitInBps);
             var bol_Backtest = new StrategyBacktester(bol_Strategy, data);
             bol_Backtest.Compute();
@@ -322,11 +329,13 @@ namespace StrategyBacktesterAddin
             List<double> bol_pnlHistory = bol_Backtest.GetPnLHistory();
             List<DateTime> bol_dates = bol_Backtest.GetDates();
             double bol_totalPnl = bol_Backtest.GetTotalPnl();
+            double maxDD = bol_Backtest.GetMaximumDrawdown();
+            double vol = bol_Backtest.GetStrategyVol();
 
             // Write the results
-            DataWriter.WriteBacktestResults("Bollinger", bol_totalPnl, bol_pnlHistory, bol_dates);
+            DataWriter.WriteBacktestResults("Bollinger", bol_totalPnl, maxDD, vol, bol_pnlHistory, bol_dates);
 
-            // If any COM objects remain try to collect them here
+            // Ensure all COM objects are realeased
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }
@@ -366,7 +375,7 @@ namespace StrategyBacktesterAddin
             {
                 if (!string.IsNullOrEmpty(text))
                 {
-                    this._bolUpperBound = int.Parse(text);
+                    this._bolUpperBound = double.Parse(text);
                 }
             }
             catch (FormatException e)
@@ -388,7 +397,7 @@ namespace StrategyBacktesterAddin
             {
                 if (!string.IsNullOrEmpty(text))
                 {
-                    this._bolLowerBound = int.Parse(text);
+                    this._bolLowerBound = double.Parse(text);
                 }
             }
             catch (FormatException e)
@@ -496,11 +505,13 @@ namespace StrategyBacktesterAddin
             List<double> pnlHistory = Backtest.GetPnLHistory();
             List<DateTime> dates = Backtest.GetDates();
             double totalPnl = Backtest.GetTotalPnl();
+            double maxDD = Backtest.GetMaximumDrawdown();
+            double vol = Backtest.GetStrategyVol();
 
             // Write the results
-            DataWriter.WriteBacktestResults("Parabolic SAR", totalPnl, pnlHistory, dates);
+            DataWriter.WriteBacktestResults("Parabolic SAR", totalPnl, maxDD, vol, pnlHistory, dates);
 
-            // If any COM objects remain try to collect them here
+            // Ensure COM objects are released
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }
@@ -627,10 +638,14 @@ namespace StrategyBacktesterAddin
         /// <param name="control">Exposes the method to the ribbon</param>
         public void OnLaunchAllPress(CustomUI.IRibbonControl control)
         {
+            // Launch all tasks
             Task movingAverageWorker = Task.Run(() => TestMovingAverage(control));
             Task parabolicSARWorker = Task.Run(() => TestParabolicSAR(control));
             Task bollingerWorker = Task.Run(() => TestBollinger(control));
 
+            // Make sure tasks have been completed. If not, .GetResult() propagates
+            // the original exception instead of the AggregatedExceptionResult usually
+            // propragated by tasks
             var movingAverageAwaiter = movingAverageWorker.GetAwaiter();
             movingAverageAwaiter.OnCompleted(() =>
             {
@@ -670,7 +685,7 @@ namespace StrategyBacktesterAddin
                 }
             });
 
-            // If any COM objects remain try to collect them here
+            // Ensure all COM objects are released
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }
