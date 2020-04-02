@@ -170,6 +170,10 @@ namespace StrategyBacktesterAddin
 
             // Write the results
             DataWriter.WriteBacktestResults("Moving Average", totalPnl, pnlHistory, dates);
+
+            // If any COM objects remain try to collect them here
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
 
         /// <summary>
@@ -321,6 +325,10 @@ namespace StrategyBacktesterAddin
 
             // Write the results
             DataWriter.WriteBacktestResults("Bollinger", bol_totalPnl, bol_pnlHistory, bol_dates);
+
+            // If any COM objects remain try to collect them here
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
 
         /// <summary>
@@ -491,6 +499,10 @@ namespace StrategyBacktesterAddin
 
             // Write the results
             DataWriter.WriteBacktestResults("Parabolic SAR", totalPnl, pnlHistory, dates);
+
+            // If any COM objects remain try to collect them here
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
 
         /// <summary>
@@ -657,6 +669,10 @@ namespace StrategyBacktesterAddin
                     ;
                 }
             });
+
+            // If any COM objects remain try to collect them here
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
     }
 }

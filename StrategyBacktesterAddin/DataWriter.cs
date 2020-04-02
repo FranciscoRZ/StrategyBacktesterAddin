@@ -26,12 +26,26 @@ namespace StrategyBacktesterAddin
         }
 
         /// <summary>
+        /// Wrapper around _writeStockData to ensure release of COM objects
         /// Writes the OHLCV daily historical data that was imported to workbook
         /// in new worksheet
         /// </summary>
         /// <param name="ticker">Ticker for which data was imported</param>
         /// <param name="data">Data that was imported</param>
         public static void WriteStockData(string ticker, List<DataTypes.Quote> data)
+        {
+            _writeStockData(ticker, data);
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+
+        /// <summary>
+        /// Writes the OHLCV daily historical data that was imported to workbook
+        /// in new worksheet
+        /// </summary>
+        /// <param name="ticker">Ticker for which data was imported</param>
+        /// <param name="data">Data that was imported</param>
+        private static void _writeStockData(string ticker, List<DataTypes.Quote> data)
         {
             // Set up workbook
             XLSingleton.Instance.XLApp.ScreenUpdating = false;
@@ -88,6 +102,7 @@ namespace StrategyBacktesterAddin
         }
 
         /// <summary>
+        /// Wrapper for _writeBacktestResults to ensure COM objects are released
         /// Writes the results of a Backtests for a given trading strategy to the 
         /// workbook.
         /// </summary>
@@ -95,7 +110,23 @@ namespace StrategyBacktesterAddin
         /// <param name="totalPnl">The total PnL of this strategy on this backtest</param>
         /// <param name="pnlHistory">The pnl history of the strategy by trade on this backtest</param>
         /// <param name="dates">The dates at which the trades were made </param>
-        public static void WriteBacktestResults(string strategyName, double totalPnl,
+        public static void WriteBacktestResults(string strategyName, double totalPnl, 
+                                                List<double> pnlHistory, List<DateTime> dates)
+        {
+            _writeBacktestResults(strategyName, totalPnl, pnlHistory, dates);
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+
+        /// <summary>
+        /// Writes the results of a Backtests for a given trading strategy to the 
+        /// workbook.
+        /// </summary>
+        /// <param name="strategyName">The backtested strategy</param>
+        /// <param name="totalPnl">The total PnL of this strategy on this backtest</param>
+        /// <param name="pnlHistory">The pnl history of the strategy by trade on this backtest</param>
+        /// <param name="dates">The dates at which the trades were made </param>
+        private static void _writeBacktestResults(string strategyName, double totalPnl,
                                                 List<double> pnlHistory, List<DateTime> dates)
         {
             // Set up workbook
