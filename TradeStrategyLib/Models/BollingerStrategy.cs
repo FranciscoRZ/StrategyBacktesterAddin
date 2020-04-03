@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TradeStrategyLib.Models;
 
 using DataTypes;
 
@@ -27,16 +28,14 @@ namespace TradeStrategyLib.Models
         private readonly double _lowerBound;
 
         /// <summary>
-        /// FIFO collection with a "short" history : _shortPricesHistory and its returns
+        /// FIFO collection with a "short" history : _shortPricesHistory
         /// </summary>
         private readonly FIFODoubleArray _shortPricesHistory;
-        private readonly FIFODoubleArray _shortReturnsHistory;
 
         /// <summary>
-        /// List with the entire history of prices and history of returns
+        /// List with the entire price history
         /// </summary>
         private List<double> _pricesHistory = new List<double>();
-        private List<double> _returnsHistory = new List<double>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MASrategy"/> class.
@@ -58,7 +57,6 @@ namespace TradeStrategyLib.Models
             this._upperBound = bolUpperBound;
             this._lowerBound = bolLowerBound;
             this._shortPricesHistory = new FIFODoubleArray(this._shortLevel);
-            this._shortReturnsHistory = new FIFODoubleArray(this._shortLevel);
         }
 
         /// <summary>
@@ -90,44 +88,17 @@ namespace TradeStrategyLib.Models
             // Histo prices
             this._pricesHistory.Add(arrivedQuote.ClosePrice);
 
-
-            // std over the entire period
-            double std;
-            if (this._pricesHistory.Count > 1) // if this_pricesHistory[1] exist
-            {
-                // New return
-                this._returnsHistory.Add(this._pricesHistory[this._pricesHistory.Count - 1] / 
-                                         this._pricesHistory[this._pricesHistory.Count - 2] - 1);
-                std = StDev(this._returnsHistory) * Math.Sqrt(252);
-            }
-            else
-            {
-                std = 0;
-            }
-
             // Update the data arrays
             this._shortPricesHistory.Put(arrivedQuote.ClosePrice);
 
             // Get the MAs for strategy
             double shortMean = this._shortPricesHistory.GetArrayMean();
 
-            // std for all the short moving average
-            double std_MA;
-            if (this._shortPricesHistory.GetSum() > this._shortPricesHistory.Get(0))
-            {
-                this._shortReturnsHistory.Put(this._pricesHistory[this._pricesHistory.Count - 1] / 
-                                              this._pricesHistory[this._pricesHistory.Count - 2] - 1);
-                std_MA = this._shortReturnsHistory.GetArrayVol() * Math.Sqrt(252);
-            }
-            else
-            {
-                std_MA = 0;
-            }
-
-
-
             // mean for all the short MA
             double mean = this._shortPricesHistory.GetArrayMean();
+
+            // Std for short MA
+            double std_MA = this._shortPricesHistory.GetArrayVol();
 
             // Upper bound
             double up_bound = this._upperBound * std_MA;
@@ -149,7 +120,7 @@ namespace TradeStrategyLib.Models
             {
                 // We flip if there's a change in position
                 // Buy signal
-                if (arrivedQuote.ClosePrice < mean + lo_bound * std && (!this._currentWay || // current way is sell
+                if (arrivedQuote.ClosePrice < mean - lo_bound && (!this._currentWay || // current way is sell
                                              this._currentTradeSituation == null)) // or there is no current trade situation
                 {
                     // close exiting order
@@ -164,8 +135,9 @@ namespace TradeStrategyLib.Models
                     this._tradeSituationHistory.Add(this._currentTradeSituation);
                     return true;
                 }
+
                 // Sell signal
-                else if (arrivedQuote.ClosePrice > mean + up_bound * std && (this._currentWay || // current way is buy
+                else if (arrivedQuote.ClosePrice > mean + up_bound && (this._currentWay || // current way is buy
                                                       this._currentTradeSituation == null)) // or there is no current trade situation
                 {
                     // Close existing order

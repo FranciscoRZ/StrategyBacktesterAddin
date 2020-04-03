@@ -110,13 +110,14 @@ namespace TradeStrategyLib.Models
         }
 
         /// <summary>
-        /// Compute the strategy's volatility as the standard deviation of the 
+        /// Compute the strategy's annualized volatility as the standard deviation of the 
         /// strategy's order's pnl
         /// </summary>
         /// <returns><see cref="double"/>The strategy's volatility</returns>
         public double GetStrategyVol()
         {
-            return ComputeStandardDeviation(this._tradeSituationHistory.Select(x => x.GetOrderPnlInBps));
+            List<double> data = this._tradeSituationHistory.Select(x => x.GetOrderPnlInBps).ToList<double>();
+            return Math.Sqrt(252) * ComputeStandardDeviation(data);
         }
 
         /// <summary>

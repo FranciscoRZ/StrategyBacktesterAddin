@@ -46,18 +46,22 @@ namespace UnitTests
         [TestMethod]
         public void TestBollingerStrategy()
         {
-            var bolStrategy = new TradeStrategyLib.Models.BollingerStrategy(25, 2, 2, 1000000.00, 0.05);
+            var bolStrategy = new TradeStrategyLib.Models.BollingerStrategy(25, 2, 2, 1000000.00, 150);
             var backtest = new StrategyBacktester(bolStrategy, _data);
             backtest.Compute();
 
             var pnlHistory = backtest.GetPnLHistory();
             var totalPnl = backtest.GetTotalPnl();
+            var maxDD = backtest.GetMaximumDrawdown();
+            var vol = backtest.GetStrategyVol();
 
             // Check if results are empty
             // NOTE FRZ: This test should be more rigorous with expected results to test
             // but I don't have the time.
             Assert.IsNotNull(pnlHistory);
             Assert.IsNotNull(totalPnl);
+            Assert.IsNotNull(maxDD);
+            Assert.IsNotNull(vol);
         }
 
         /// <summary>
@@ -66,18 +70,21 @@ namespace UnitTests
         [TestMethod]
         public void TestSARStrategy()
         {
-            var sarStrategy = new TradeStrategyLib.Models.ParabolicSARStrategy(20, 100, 5, 1000000.00, 0.05);
+            var sarStrategy = new TradeStrategyLib.Models.ParabolicSARStrategy(20, 100, 5, 1000000.00, 150);
             var backtest = new StrategyBacktester(sarStrategy, _data);
             backtest.Compute();
 
             var pnlHistory = backtest.GetPnLHistory();
             var totalPnl = backtest.GetTotalPnl();
-
+            var maxDD = backtest.GetMaximumDrawdown();
+            var vol = backtest.GetStrategyVol();
             // Check if results are empty
             // NOTE FRZ: This test should be more rigorous with expected results to test
             // but I don't have the time.
             Assert.IsNotNull(pnlHistory);
             Assert.IsNotNull(totalPnl);
+            Assert.IsNotNull(maxDD);
+            Assert.IsNotNull(vol);
         }
 
         /// <summary>
@@ -86,18 +93,22 @@ namespace UnitTests
         [TestMethod]
         public void TestMAStrategy()
         {
-            var maStrategy = new TradeStrategyLib.Models.MAStrategy(25, 100, 1000000.00, 0.05);
+            var maStrategy = new TradeStrategyLib.Models.MAStrategy(25, 100, 1000000.00, 150);
             var backtest = new StrategyBacktester(maStrategy, _data);
             backtest.Compute();
 
             var pnlHistory = backtest.GetPnLHistory();
             var totalPnl = backtest.GetTotalPnl();
+            var maxDD = backtest.GetMaximumDrawdown();
+            var vol = backtest.GetStrategyVol();
 
             // Check if results are empty
             // NOTE FRZ: This test should be more rigorous with expected results to test
             // but I don't have the time.
             Assert.IsNotNull(pnlHistory);
             Assert.IsNotNull(totalPnl);
+            Assert.IsNotNull(maxDD);
+            Assert.IsNotNull(vol);
         }
     }
 }
