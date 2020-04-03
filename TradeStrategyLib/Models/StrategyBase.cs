@@ -87,9 +87,18 @@ namespace TradeStrategyLib.Models
         /// greatest drawdown in the strategy's trades
         /// </summary>
         /// <returns><see cref="double"/>the strategy's Maximum Drawdown</returns>
-        public double GetMaximumDrawdown()
+        public double? GetMaximumDrawdown()
         {
-            return -this._tradeSituationHistory.Select(x => x.GetMaxDrawDown).Min();
+            double? dd;
+            try
+            {
+                dd = -this._tradeSituationHistory.Select(x => x.GetMaxDrawDown).Min();
+            }
+            catch (ArgumentNullException)// tradeSituationHistory is empty
+            {
+                dd = null; 
+            }
+            return dd;
         }
         
         /// <summary>
@@ -117,7 +126,7 @@ namespace TradeStrategyLib.Models
 
         /// <summary>
         /// Compute the strategy's annualized volatility as the standard deviation of the 
-        /// strategy's order's pnl
+        /// strategy's daily value multiplied by the square root of 252.
         /// </summary>
         /// <returns><see cref="double"/>The strategy's volatility</returns>
         public double GetStrategyVol()

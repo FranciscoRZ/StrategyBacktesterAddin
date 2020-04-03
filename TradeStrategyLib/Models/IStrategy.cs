@@ -45,7 +45,7 @@ namespace TradeStrategyLib.Models
         /// maximum drawdown in the strategy's trade history
         /// </summary>
         /// <returns><see cref="double"/>The strategy's maximum drawdown</returns>
-        double GetMaximumDrawdown();
+        double? GetMaximumDrawdown();
 
         /// <summary>
         /// Compute the strategy's volatility as the standard deviation of the 

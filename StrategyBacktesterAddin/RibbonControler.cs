@@ -172,7 +172,7 @@ namespace StrategyBacktesterAddin
             List<double> pnlHistory = backtest.GetPnLHistory();
             List<DateTime> dates = backtest.GetDates();
             double totalPnl = backtest.GetTotalPnl();
-            double maxDD = backtest.GetMaximumDrawdown();
+            double? maxDD = backtest.GetMaximumDrawdown();
             double vol = backtest.GetStrategyVol();
 
             // Write the results
@@ -329,7 +329,7 @@ namespace StrategyBacktesterAddin
             List<double> bol_pnlHistory = bol_Backtest.GetPnLHistory();
             List<DateTime> bol_dates = bol_Backtest.GetDates();
             double bol_totalPnl = bol_Backtest.GetTotalPnl();
-            double maxDD = bol_Backtest.GetMaximumDrawdown();
+            double? maxDD = bol_Backtest.GetMaximumDrawdown();
             double vol = bol_Backtest.GetStrategyVol();
 
             // Write the results
@@ -505,7 +505,7 @@ namespace StrategyBacktesterAddin
             List<double> pnlHistory = Backtest.GetPnLHistory();
             List<DateTime> dates = Backtest.GetDates();
             double totalPnl = Backtest.GetTotalPnl();
-            double maxDD = Backtest.GetMaximumDrawdown();
+            double? maxDD = Backtest.GetMaximumDrawdown();
             double vol = Backtest.GetStrategyVol();
 
             // Write the results

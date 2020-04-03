@@ -110,7 +110,7 @@ namespace StrategyBacktesterAddin
         /// <param name="totalPnl">The total PnL of this strategy on this backtest</param>
         /// <param name="pnlHistory">The pnl history of the strategy by trade on this backtest</param>
         /// <param name="dates">The dates at which the trades were made </param>
-        public static void WriteBacktestResults(string strategyName, double totalPnl, double maxDD, 
+        public static void WriteBacktestResults(string strategyName, double totalPnl, double? maxDD, 
                                                 double vol, List<double> pnlHistory, List<DateTime> dates)
         {
             _writeBacktestResults(strategyName, totalPnl, maxDD, vol, pnlHistory, dates);
@@ -127,7 +127,7 @@ namespace StrategyBacktesterAddin
         /// <param name="pnlHistory">The pnl history of the strategy by trade on this backtest</param>
         /// <param name="dates">The dates at which the trades were made </param>
         private static void _writeBacktestResults(string strategyName, double totalPnl,
-                                                  double maxDD, double vol, List<double> pnlHistory, List<DateTime> dates)
+                                                  double? maxDD, double vol, List<double> pnlHistory, List<DateTime> dates)
         {
             // Set up workbook
             XLSingleton.Instance.XLApp.ScreenUpdating = false;

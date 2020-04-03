@@ -81,7 +81,7 @@ namespace TradeStrategyLib
         /// Gets the strategy's maximum drawdown
         /// </summary>
         /// <returns><see cref="double"/>Maximum DD of the strategy</returns>
-        public double GetMaximumDrawdown()
+        public double? GetMaximumDrawdown()
         {
             return this._strategy.GetMaximumDrawdown();
         }
