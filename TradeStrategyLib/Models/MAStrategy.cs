@@ -58,7 +58,7 @@ namespace TradeStrategyLib.Models
         /// </summary>
         /// <param name="arrivedQuote">Used to update all the parameters of the trading strategy.</param>
         /// <returns>true if the position is opened (or flipped), false otherwise</returns>
-        public override bool Step(Quote arrivedQuote)
+        protected override bool _step(Quote arrivedQuote)
         {
             // Update the data arrays
             this._longPricesHistory.Put(arrivedQuote.ClosePrice);

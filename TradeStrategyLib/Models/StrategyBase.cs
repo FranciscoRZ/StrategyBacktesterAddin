@@ -36,6 +36,12 @@ namespace TradeStrategyLib.Models
         /// </summary>
         protected ITradeSituation _currentTradeSituation = null;
 
+
+        /// <summary>
+        /// Strategy's daily value since the first trade.
+        /// </summary>
+        protected List<double> _strategyDailyValue = new List<double>();
+
         /// <summary>
         /// Get the amount used to trade
         /// </summary>
@@ -116,8 +122,39 @@ namespace TradeStrategyLib.Models
         /// <returns><see cref="double"/>The strategy's volatility</returns>
         public double GetStrategyVol()
         {
-            List<double> data = this._tradeSituationHistory.Select(x => x.GetOrderPnlInBps).ToList<double>();
-            return Math.Sqrt(252) * ComputeStandardDeviation(data);
+            //List<double> data = this._tradeSituationHistory.Select(x => x.GetOrderPnlInBps).ToList<double>();
+            return Math.Sqrt(252) * ComputeStandardDeviation(this._strategyDailyValue);
+        }
+
+        /// <summary>
+        /// Steps through a quote arrival in the strategy, and computes and updates the daily value of the strategy
+        /// since the first trade.
+        /// </summary>
+        /// <param name="arrivedQuote"></param>
+        /// <returns></returns>
+        public bool Step(Quote arrivedQuote)
+        {
+            bool ret = this._step(arrivedQuote);
+            double value;
+            ITradeSituation lastTrade;
+            // Update the strategy value
+            if (this._tradeSituationHistory.Count != 0) // check that a trade has actually happened
+            {
+                if (this._currentTradeSituation == null) // there's no open position
+                {
+                    lastTrade = this._tradeSituationHistory.Last();
+                    this._strategyDailyValue.Add(lastTrade.GetOrderPnlInBps);
+                }
+                else // there's an open position
+                {
+                    value = this._currentTradeSituation.IsLongTrade ? (arrivedQuote.ClosePrice - this._currentTradeSituation.GetEntryPrice)
+                                                                      / this._currentTradeSituation.GetEntryPrice 
+                                                                    : (this._currentTradeSituation.GetEntryPrice - arrivedQuote.ClosePrice)
+                                                                      / arrivedQuote.ClosePrice;
+                    this._strategyDailyValue.Add(value);    
+                }
+            }
+            return ret;
         }
 
         /// <summary>
@@ -125,8 +162,13 @@ namespace TradeStrategyLib.Models
         /// </summary>
         /// <param name="arrivedQuote">USed to update all the parameters for the trading strategy</param>
         /// <returns><see cref="bool"/> true if the position if opened (or flipped), false otherwise</returns>
-        public abstract bool Step(Quote arrivedQuote);
+        protected abstract bool _step(Quote arrivedQuote);
 
+        /// <summary>
+        /// Constructor for base asbtract class, called in child classes.
+        /// </summary>
+        /// <param name="tpInBps">Take Profit for the strategy in Bps.</param>
+        /// <param name="amount">Amount invested in the strategy</param>
         protected StrategyBase(double tpInBps, double amount)
         {
             this._amount = amount;
