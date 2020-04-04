@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -170,6 +171,13 @@ namespace StrategyBacktesterAddin
             backtest.Compute();
 
             List<double> pnlHistory = backtest.GetPnLHistory();
+            if (!pnlHistory.Any())
+            {
+                MessageBox.Show("Moving average strategy did not generate any trades on this" +
+                                " time interval");
+                return;
+            }
+
             List<DateTime> dates = backtest.GetDates();
             double totalPnl = backtest.GetTotalPnl();
             double? maxDD = backtest.GetMaximumDrawdown();
@@ -327,6 +335,12 @@ namespace StrategyBacktesterAddin
             bol_Backtest.Compute();
 
             List<double> bol_pnlHistory = bol_Backtest.GetPnLHistory();
+            if (!bol_pnlHistory.Any())
+            {
+                MessageBox.Show("Bollinger strategy did not generate any trades on this " +
+                                "time interval");
+                return;
+            }
             List<DateTime> bol_dates = bol_Backtest.GetDates();
             double bol_totalPnl = bol_Backtest.GetTotalPnl();
             double? maxDD = bol_Backtest.GetMaximumDrawdown();
@@ -503,6 +517,12 @@ namespace StrategyBacktesterAddin
             Backtest.Compute();
 
             List<double> pnlHistory = Backtest.GetPnLHistory();
+            if (!pnlHistory.Any())
+            {
+                MessageBox.Show("Parabolic SAR strategy did not generate any trades " +
+                                "in this time interval.");
+                return;
+            }
             List<DateTime> dates = Backtest.GetDates();
             double totalPnl = Backtest.GetTotalPnl();
             double? maxDD = Backtest.GetMaximumDrawdown();
